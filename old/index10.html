@@ -1,0 +1,524 @@
+<!-- HTML -->
+	<!DOCTYPE html><head> <meta charset="utf-8">
+	<script type="text/javascript" src="d3.v3.js"></script>
+	<script  type="text/javascript" src="d3.layout.cloud.js"> </script>
+	<script  type="text/javascript" src="pace.min.js"> </script>
+	<link href="pace.css" rel="stylesheet" />
+	<title>Twitter LingvoAnalyze</title>
+	<style> 
+	@font-face {
+		 font-family: 'PT Sans Narrow';
+		 font-style: normal;
+		 font-weight: 400;
+		 src: url(http://themes.googleusercontent.com/static/fonts/ptsansnarrow/v4/UyYrYy3ltEffJV9QueSi4U6k4-tXVqWiMv2fNYOodmA.woff) format('woff'),
+		 url('PTN57F_W.eot?#iefix') format('embedded-opentype');
+		} 
+	body {   font: 14px 'PT Sans Narrow',sans-serif;   background: #111;   color: #fff; }
+	div.inline { float:left; }
+	.tw {width:130px;font-size:10px;}
+	.ttm {width:247px;font-size:10px;}
+	.clearBoth { clear:both; height:1px;}
+	.line {stroke-width:1px;fill:none;opacity:1};
+	p {margin-right:5px;}
+	#tweets #tweet_text_margin {}
+	</style></head><body>
+	<div id='hint1' width='230' height='100' x='0' y='0' style='display:none;'><p style='color:#222;padding:10px;margin-top:0px'>Чтобы "заморозить" показатели кликни на выделенную линию.<br/>Для "разморозки"" кликни в любое место графика.</p></div>
+	<div id='graphC'></div><br class="clearBoth" />
+	<div id='tweet_dates' ><div id='tweet_date_text_margin' class='inline ttm'><p style='color:#666'>(с) Меркатор, 2013<p></div></div><br class="clearBoth" />
+	<div id='tweets' ><div id='tweet_text_margin' class='inline ttm'><p style='color:#666'> <p></div></div>
+
+	<script>
+	function cl(eee) {eee ? console.log(eee) : console.log('ok');}
+
+// V A R s
+	var svg; var svgFile='tw13.svg';
+	var bar_len=100;
+	var x;
+	var numCatsInit=5;
+	var intervalTransform;
+	var ui={};  var m={'hover':{},'out':{},'click':{}}; var uiKeys={'cats':{}, 'types':{}, 'interval':{}, 'backs':{}, 'dates':{}};
+	var cur={}; for (key in uiKeys) cur[key]={};
+	var upd={}; var size={}; var col={}; 
+	var data={'cats':[],'catsByName':[],'colorByCat':{},'twitters':[],'twittersByName':{},'tweets':{},'all':{'stat':{}},'time':{'emo':[],'me':{},'sure':{},'conv':{},'words':{}}};
+	var data2={}, data3=[];
+	var statKeys={'pos':'positiv','neg':'negative','me':'me0','we':'me1','they':'me2','sure':'sure','unsure':'unsure','conv':'irregular','mat':'money','rt':'rt','reply':'reply','num':'num'};
+	var backKeys={'pos':'emo','neg':'emo','me':'me','we':'me','they':'me','sure':'sure','unsure':'sure','conv':'conv','mat':'conv','words':'words'};
+	var barKeys={'pos':'emo','neg':'emo','me':'me','we':'me','they':'me','sure':'sure','unsure':'sure','conv':'conv','mat':'mat','words':'words'};
+	var barK={'emo':0,'me':1,'sure':2,'conv':3,'mat':4};
+	var barColors={'pos':'pos','neg':'neg','me':'pos','we':'neutral','they':'neg','sure':'pos','unsure':'neg','conv':'pos','mat':'neg','words':'Main'};
+	var allDates={};
+	var selCats=[];
+	var tw2i={};
+	var scale={'bar':{},'words':{}};
+	var hoverCount=0; hCount=4;
+
+function ifPlus(a,b) {if (!a) {a=b;} else a+=b; }
+// UI Updates
+upd.cats=function(id){
+	if (id) {
+		cur.cats[id].sel=!cur.cats[id].sel;
+		selCats.splice(0,selCats.length);
+		for (key in cur.cats) if (cur.cats[key].sel) selCats.push(cur.cats[key].cat);
+		if (selCats.length==1) {cur.if1cat=selCats[0]} else  cur.if1cat='';  
+		if (selCats.length==0) for (key in cur.cats) if (cur.cats[key].visible) cur.cats[key].sel=true;
+		if (data.time.emo.length>0) showEmoGraph(); 
+		upd.bars();
+	}
+	ui.cats.data(d3.entries(cur.cats), function(d){return d ? d.key : this.id})
+			.transition().style('display',function(d){ return d.value.visible ? 'inline' : 'none'}).duration(500);
+	ui.cats.select('rect').transition()
+		.style('fill',function(d){  return cur.cats[d.key].sel ? (!cur.if1cat ? col[d.key.substring(3,4)]: col.Light) : col.Back;})
+		.style('stroke',function(d){ return ((!cur.if1cat&&cur.cats[d.key].sel) ? col[d.key.substring(3,4)]: col.Light);});
+	ui.cats.select('text').select('tspan').transition().style('fill',function(d){ 
+		return cur.cats[d.key].sel ? col.Back: ((!cur.if1cat&&cur.cats[d.key].sel) ? col[d.key.substring(3,4)]: col.Light);});
+	ui.cats.select('text').select('tspan').text(function(d){ return d.value.name; });}
+upd.types=function(id){
+	if (id) cur.types[id].sel=!cur.types[id].sel;
+	ui.types.data(d3.entries(cur.types), function(d){return d ? d.key : this.id})
+		.select('rect').transition()
+		.style('fill',function(d){  return cur.types[d.key].sel ? col.Light : col.Back;})
+		.style('stroke',col.Light);
+	ui.types.select('text').select('tspan').transition().style('fill',function(d){ return cur.types[d.key].sel ? col.Back: col.Light;});}
+upd.backs=function(id){
+	if (id&&(!cur.backs[id].sel)) for (key in cur.backs) {(key!=id) ? cur.backs[key].sel=false : cur.backs[key].sel=true; }
+	ui.backs.data(d3.entries(cur.backs), function(d){return d ? d.key : this.id});
+	ui.backs.style('cursor',function(d){return cur.backs[d.key].sel ? null : 'pointer';})
+	ui.backs.transition()
+		.style('fill',function(d){  return (cur.backs[d.key].sel ? col.Dark : col.Back);})
+		.select('rect').style('stroke',col.Dark);
+	d3.select('#values_names').selectAll('text').attr('fill',function(){
+		return cur.backs[backKeys[this.id.substring(2)]+'_back'].sel ? barColors[this.id.substring(2)] : col.Main;})
+	d3.select('#bars').selectAll('rect').attr('fill',function(){ return cur.backs[backKeys[this.id]+'_back'].sel ? barColors[this.id] : col.Main;}); }
+upd.bars=function(){
+	for (key in barK) {
+		scale.bar[key]=d3.scale.linear().range([0,bar_len]);
+		scale.bar[key].domain([0,d3.max(data.twitters,function(d){
+			if (selCats.indexOf(d.cat)>-1) { var aaa=[]; for (kk in backKeys) if (barKeys[kk]==key) aaa.push(d.stat[kk]); return d3.max(aaa); }	})]);		
+	}
+	if (cur.if1cat) d3.select('#av_bars').selectAll('rect').data(d3.entries(data.twitters[tw2i[cur.if1cat]].stat), function (d) { return d ? 'av_'+d.key : this.id; })
+		.transition().attr('width',function (d) { return scale.bar[barKeys[this.id.substring(3)]](d.value);}).duration(500)
+	else d3.select('#av_bars').selectAll('rect').data(d3.entries(data.all.stat), function (d) { return d ? 'av_'+d.key : this.id; })
+		.transition().attr('width',function (d) { return scale.bar[barKeys[this.id.substring(3)]](d.value);}).duration(500);
+	if (cur.select) { d3.select('#bars').selectAll('rect')
+		.data(d3.entries(data.twitters[tw2i[cur.select]].stat), function (d) { return d ? d.key : this.id; });
+	}
+	d3.select('#bars').selectAll('rect').transition().attr('width',function (d) { return cur.select ? scale.bar[barKeys[this.id]](d.value) : 0;}).duration(500);
+	showWords();}
+upd.interval=function(id){
+	if (id&&(id!='cur')) {
+		cur.interval.cur=[cur.interval[id],cur.interval[id]=cur.interval.cur][0];
+		if (cur.interval.interval2.length>cur.interval.interval3.length) 
+			cur.interval.interval2=[cur.interval.interval3,cur.interval.interval3=cur.interval.interval2][0];
+	};
+	for (key in cur.interval) svg.selectAll('.date_interval').text(function() {return cur.interval[this.id]});}
+upd.dates=function(dd,tt) {
+	if (dd) cur.dates[tt]=dd;
+	['begin','end'].forEach(function(ddd){ui.dates.select('#'+ddd+'_date_text').select('tspan').transition().style('fill',col.Dark).text(cur.dates[ddd]);});	
+	d3.select('#lineDate').transition().attr('fill',col.Main);}
+upd.account=function(){
+	t=(cur.select ? data.twittersByName[cur.select] : (cur.if1cat ? data.catsByName[cur.if1cat]+' в среднем' : 'Все аккауты в среднем'))
+	d3.select('#account').transition().attr('fill',function(){return cur.select ? col.Main : col.Light}).text(t);
+	d3.selectAll('.lineName').transition().text(data.twittersByName[cur.select]); }
+upd.all=function(){
+	upd.cats();
+	upd.types();
+	upd.backs();
+	upd.dates();
+	upd.interval();
+	upd.texts();
+	upd.bars()}
+upd.texts=function(m,d){
+	for (i=0;i<7;i++) { d3.select('#day'+i).selectAll('p').style('fill',col.Back).remove(); 
+		d3.select('#dday'+i).style('fill',col.Back).selectAll('p').remove();}	
+	if (m&&(d.name!=d.cat)) {
+	    if (data2[d.name][cur.lineDate=d3.time.monday(x.invert(m[0]))]) {
+	    	data.tweets=data2[d.name][cur.lineDate].tweets;
+		   	//console.log(d3.entries(tweets));
+		   	//console.log(data.tweets,d3.entries(data.tweets));
+		   	parseDate = d3.time.format("%Y-%m-%d").parse;
+			format=d3.time.format('%d.%m.%Y');
+			for (i=0;i<7;i++) {
+				data.dateTweets=d3.entries(data.tweets).filter(function(dd){return (format(d3.time.day.offset(cur.lineDate,i))==format(parseDate(dd.key.split(' ')[0])))});
+				d3.select('#dday'+i).append('p').style('color',col.Main).transition().text(function(){ return format(d3.time.day.offset(cur.lineDate,i)); });
+				//console.log(i+' '+data.dateTweets)
+			   	d3.select('#day'+i).selectAll('p')
+					.data(data.dateTweets).enter().append('p')
+					.style('color',function(dd){ return (dd.value.pos==dd.value.neg) ? col.Grey : ((dd.value.pos>dd.value.neg) ? col.pos : col.neg)})
+					.transition().text(function(dd){ return (dd.value.text); });
+			}
+		}
+	}}
+
+function catClick(id) { upd.cats(id); upd.account(); } 
+function catOut(id) { upd.cats(); }
+function catOver(id) {
+	if (cur.cats[id].sel) { svg.select('#'+id).select('rect').transition().style('fill',col.Main).style('stroke',col.Main); }
+	else { 	svg.select('#'+id).select('rect').transition().style('stroke',col.Main); 
+			svg.select('#'+id).select('text').select('tspan').transition().style('fill',col.Main); };}
+function tweetTypesClick(id) { upd.types(id); } function tweetTypesOut(id) { upd.types(); }
+function tweetTypesOver(id) {
+	if (cur.types[id].sel) { svg.select('#'+id).select('rect').transition().style('fill',col.Main).style('stroke',col.Main); }
+	else { 	svg.select('#'+id).select('rect').transition().style('stroke',col.Main); 
+			svg.select('#'+id).select('text').select('tspan').transition().style('fill',col.Main); };}
+function dateClick() { } 
+function dateOut() { upd.dates(); }
+function dateOver(dd) {
+	ui.dates.select('#begin_date_text').select('tspan').transition().style('fill',col.Main);
+	ui.dates.select('#end_date_text').select('tspan').transition().style('fill',col.Main);
+	d3.select('#lineDate').transition().attr('fill',col.Dark);}
+function barBacksClick(id) { 
+	upd.backs(id); 
+	if (1) showEmoGraph();} 
+function barBacksOut(id) { upd.backs(); }
+function barBacksOver(id) { if (!cur.backs[id].sel) svg.select('#'+id).select('rect').transition().style('stroke',col.Main); }
+function dateIntervalHover (id) { 
+	svg.select('#intervalSelect').transition().attr('transform','translate(0,0)').duration(250);
+	svg.selectAll('.date_interval').style('cursor',function(){if (this.id!='cur') {return 'pointer'} else return '';})
+		.on('click',function(){ if (this.id!='cur') {dateIntervalOut(); upd.interval(this.id); } }); }
+function dateIntervalOut () { svg.select('#intervalSelect').transition().attr('transform',intervalTransform).duration(400);}
+
+m.click.line=function(t,d) { 
+	if (cur.isSelect) {
+		cur.isSelect=0;
+		cur.select='';
+		d3.select('#clickBox').style('display','none');
+		clearEmo();
+		upd.bars();
+	} else {
+		cur.isSelect=1;
+		d3.select('#clickBox').style('display','inline');
+	}}
+m.out.line=function(t,d) { 
+	if ((cur.select)&&(!cur.isSelect)) {
+		clearEmo();
+		cur.select='';
+		upd.account();
+		upd.texts();
+		upd.bars();
+	}	 }
+m.hover.line=function (t,d){
+	if ((!cur.select)&&(!cur.isSelect)) {
+		cur.select=d.name;
+	    upd.account();
+	    d.color=t.style.stroke;
+	    lastColor=d.color;
+	    lastId=t.getAttribute('id');
+		//lWidth=d3.scale.linear().range([0.5,6]).domain([d3.min(data.time.cur, function(c) { return d3.min(c.values, function(v) { return v.num; }); }),d3.max(data.time.cur, function(c) { return d3.max(c.values, function(v) { return v.num; }); })]);
+	    d3.select('path#pos_'+d.name).style('stroke',col.pos).style('stroke-width','4px');
+	    d3.select('path#neg_'+d.name).style('stroke',col.neg).style('stroke-width','4px');
+	    up(t.parentNode);
+	    var m = d3.mouse(t);
+	    upd.texts(m,d);	  
+	    upd.bars(); 
+	    if (hoverCount<hCount) hint(m);
+	}}
+function xAxis(yy){ 
+	svg.select('#xAxis').remove();
+	if (yy) svg.append('rect').attr('id','xAxis').attr('x',size.graph.x).attr('y',yy).attr('width',size.graph.width).attr('height',1).attr('stroke-width',0).style('fill',col.Grey)}
+
+function makeSize(t,s,id) { t.attr("width", s.width).attr("height", s.height).attr('x',s.x).attr('y',s.y).attr('id',id); }
+function clearEmo(){ 
+	function clEmo(posneg){ 
+		d3.selectAll('path.'+posneg).transition().style('stroke-width','1px')
+			.style("stroke", function(d){ return ((!cur.if1cat) ? col[data.colorByCat[d.cat]]:((d.cat==d.name) ? col[posneg] : col[posneg+'D'])); }).duration(400);	}
+	clEmo('pos'); clEmo('neg'); 
+	if (hoverCount==(hCount-1)) {
+		d3.select('#hintG').style('display','none').remove();
+		hoverCount=hCount;
+		cur.isSelect=false;
+	};
+	upd.texts(); 
+	upd.account();}
+function showWords(){
+	d3.select("#wordCloud").selectAll('text').transition().style("font-size", '0px');
+	d3.select("#wordCloud").transition().remove();
+	d3.select("#wordCloudAll").style('display','none');
+	var tempSel=cur.select;
+	//if (cur.if1cat&&!cur.select) cur.select=cur.if1cat;
+	if (cur.select) {
+		var curWords=data.twitters[tw2i[cur.select]].stat.words;
+		scale.words=d3.scale.linear().range([8, 20]);
+		scale.words.domain([d3.min(curWords,function(d){return d.size;}),d3.max(curWords,function(d){return d.size;})]);
+		cl(cur.select);
+		cl([d3.min(curWords,function(d){return d.size;}),d3.max(curWords,function(d){return d.size;})]);
+		function draw(words) {
+			makeSize(d3.select("#words_cont").append("g"),size.words,'wordCloud');
+		    d3.select("#wordCloud")
+		      //.append("g")
+		      .attr("transform", "translate("+(size.words.x+size.words.width/2)+","+(size.words.y+size.words.height/2)+")")
+		      .selectAll("text").data(words)
+		      .enter().append("text")
+		        .style("font-size", '0px')
+		        .style("font-weight", 'bold')
+		        .style("fill", cur.backs['words_back'].sel ? col.neutral : col.Main)
+		        .attr("text-anchor", "middle")
+		        .attr("transform", function(d) {
+		          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+		        })
+		        .text(function(d) { return d.text; })
+		        .transition().style("font-size", function(d) { return scale.words(+d.size) + "px"; })
+		        .duration(500);
+		  }
+		d3.select("#wordCloud").remove();
+		d3.layout.cloud().size([size.words.width, size.words.height])
+			.words(curWords)
+			.padding(2)
+			.rotate(function() { return 0; })
+			.fontSize(function(d) { return scale.words(+d.size); })
+			.on("end", draw)
+			.start();
+	}
+	cur.select=tempSel;}
+function hint(m){
+	hoverCount+=1;
+	if (hoverCount==(hCount-1)) {
+		var hint1=document.getElementById('hint1');
+		//console.log('ok',hint1);
+		svg.append('g').attr('id','hintG').on('click',function(){clearEmo();})
+			.append('rect').attr('x','0').attr('y','0').attr('width','250').attr('height','100').attr('fill','#fff').attr('opacity','0.8');
+		d3.select('#hintG').append('foreignObject').attr('id','foHint').attr('x','0').attr('y','0').attr('width','230').attr('height','100');
+		document.getElementById('foHint').appendChild(hint1);
+		d3.select('#hintG')
+			.attr("transform", function(){
+				if (m[0]+220<size.svg.x2) { return "translate("+(m[0])+"," + (m[1]) + ")"; }
+				else return "translate("+(m[0]-200)+"," + (m[1]) + ")";
+			})
+			.select('div').style('display','inline');
+		d3.select('#clickBox').style('display','inline');
+		cur.isSelect=true;
+	}}
+function showEmoGraph() {
+
+	data.time.cur=[];
+	function emoFilter(d){
+		//console.log((cur.if1cat!=''),(d.cat==d.name),(selCats.indexOf(d.cat)>=0),d);
+		if (cur.if1cat=='') { return (d.cat==d.name);}
+		else { return (cur.if1cat==d.cat);}
+	}
+	data.time.emo.forEach(function(d){ if (emoFilter(d)) data.time.cur.push(d); });
+	scalesXX=[
+		d3.min(data.time.cur, function(c) { return d3.min(c.values, function(v) { return v.date; }); }),
+		d3.max(data.time.cur, function(c) { return d3.max(c.values, function(v) { return v.date; }); })]
+
+	
+	scalesYY=[0.8*d3.min(data.time.cur, function(c) { return d3.min(c.values, function(v) { return Math.min(v.pos,v.neg); }); }),
+		0.8*d3.max(data.time.cur, function(c) { return d3.max(c.values, function(v) { return Math.max(v.pos,v.neg); }); })]
+	cur.dates.begin=d3.time.format("%d %B %Y")(scalesXX[0]);
+	cur.dates.end=d3.time.format("%d %B %Y")(scalesXX[1]);
+	upd.dates();
+	x = d3.time.scale().range([size.graph.x, size.graph.x+size.graph.width]); x.domain(scalesXX);	
+	xAxis((!cur.if1cat) ? size.graph.y+size.graph.height/2 : null);
+	var y={'pos':d3.scale.linear().range([size.graph.y+size.graph.height/2,size.graph.y]),
+		'neg':d3.scale.linear().range([size.graph.y+size.graph.height/2, size.graph.y+size.graph.height])};
+	var line={};
+	['pos','neg'].forEach(function(dd){ y[dd].domain(scalesYY);
+		line[dd]=d3.svg.line().interpolate("basis").x(function(d) { return x(d.date); }).y(function(d) { return y[dd](d[dd]);});})
+	svg.selectAll(".twitter").style('stroke',cBack).remove();
+	var emo_lines = svg.selectAll(".twitter").data(data.time.cur).enter().append("g").attr("class", "twitter");
+	//console.log(emo_lines);
+	//emo_lines.exit().remove();
+	function pAppend(posneg){
+		emo_lines.append("path").attr("class", "line "+posneg).attr('id',function(d){return posneg+'_'+d.name})
+			.transition().attr("d", function(d) { return line[posneg](d.values); })
+			.style("stroke", function(d){ return ((!cur.if1cat) ? col[data.colorByCat[d.cat]]:
+				((d.cat==d.name) ? col[posneg] : col[posneg+'D'])); }).duration(300);}
+	pAppend('pos'); pAppend('neg');
+	emo_lines.selectAll("path")
+		.on('mouseover', function(d){m.hover.line(this,d);})
+		.on('mouseout', function(d){m.out.line(this,d);})
+		.on('click', function(d){m.click.line(this,d);});
+	}
+function data_process(csvData) {
+	var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+	ii=-1;
+	dataCat={'gov':{},'politics':{}};
+	for (key in dataCat) {
+		data.catByTwitter[key]=key;
+		data.twittersByName[key]=data.catsByName[key]+' в среднем';
+
+		tw2i[key]=data.twitters.length;
+		data.twitters.push({'twitter':key,'cat':key});
+		//console.log(tw2i);
+	}
+	for (c in dataCat) data.catByTwitter[c]=c;
+	for (i=1;i<(csvData.length-2)/1;i++) { //
+		name=csvData[i].name.substring(1,csvData[i].name.length-1);
+
+		if (!(name in data2)) { 
+			data2[name]={'cat':data.catByTwitter[name],'values':[],'curStat':{}};
+			iii=(-1); 
+			ii++;
+			data3[ii]={'name':name,'cat':data.catByTwitter[name],'values':[],'curStat':{}};
+			for (key in statKeys) data3[ii].curStat[key]=0;
+		}
+		dateText=csvData[i].date+' '+csvData[i].time;
+		date=d3.time.monday(parseDate(dateText));
+		if (!(date in allDates)) allDates[date]=date;
+		if (!(date in data2[name])) { 
+			data2[name][date]={}; 
+			data2[name][date].tweets={};
+			for (key in statKeys) data2[name][date][key]=0;	
+			iii++;
+			//data2[name][date].num=0;
+		}
+		data2[name][date].tweets[dateText]={'text':csvData[i].text,'pos':+csvData[i].positiv,'neg':+csvData[i].negative}
+		csvData[i].num=1;
+		data3[ii].values[iii]={};
+		for (key in statKeys) {
+			data2[name][date][key]+=(+csvData[i][statKeys[key]]);
+			data3[ii].values[iii][key]=data2[name][date][key];
+			data3[ii].values[iii].date=date;
+			data3[ii].curStat[key]+=(+csvData[i][statKeys[key]]);
+		}
+	}
+	for (name in data2)
+		for (date in data2[name])
+			if ((date!='name')&&(date!='cat')&&(date!='values')&&(date!='curStat'))
+				for (c in dataCat)
+					if (c==data2[name].cat)
+						if (!dataCat[c][date]) { 
+							dataCat[c][date]={}; 
+							for (key in statKeys) dataCat[c][date][key]=data2[name][date][key];
+						} else { for (key in statKeys) dataCat[c][date][key]+=data2[name][date][key]; }
+	//console.log(dataCat);
+	allDatesArr=[]; i=0;
+	for (d in allDates) allDatesArr[i++]=allDates[d];
+	allDatesArr.sort(function(a,b){ return a-b});
+	for (c in dataCat) {
+		dataCat[c].stat={};
+		for (key in statKeys) {
+			data3.forEach(function(d){ 
+				//console.log(key,dataCat[c].stat,d.curStat);
+				if (d.cat==c) {
+					if (!dataCat[c].stat[key]) 
+						dataCat[c].stat[key]=d.curStat[key] 
+					else dataCat[c].stat[key]+=d.curStat[key]; 				
+				}});
+
+			if (!data.all.stat[key]) data.all.stat[key]=dataCat[c].stat[key] 
+				else data.all.stat[key]+=dataCat[c].stat[key];
+		}
+
+		data3[data3.length]={'name':c,'cat':c,'values':[],'curStat':dataCat[c].stat};
+		i=0;
+		for (ii=0;ii<allDatesArr.length;ii++)
+			if (dataCat[c][allDatesArr[ii]]) {
+				data3[data3.length-1].values[i]=dataCat[c][allDatesArr[ii]];
+				data3[data3.length-1].values[i].date=allDatesArr[ii];
+				i++;
+			}
+	}
+	for (key in statKeys) if (key!='num') data.all.stat[key]=data.all.stat[key]/data.all.stat.num;
+	for (i=0;i<data3.length;i++) {
+		data3[i].cat=data.catByTwitter[data3[i].name];
+		for (key in statKeys) if (key!='num') data3[i].curStat[key]=data3[i].curStat[key]/data3[i].curStat.num;
+		for (ii=0;ii<data3[i].values.length;ii++) if (data3[i].values[ii]) 
+				for (key in statKeys) if (key!='num') 
+					data3[i].values[ii][key]=data3[i].values[ii][key]/data3[i].values[ii].num;
+		
+	}}
+function lineInit(t){
+	if (x&&(isInBox(d3.mouse(t),size.graph))&&(!cur.isSelect)) {
+		svg.select('#pointer').style('display','inline');
+		xxx=d3.mouse(t)[0]; var maxLineWidth=0; var lineWidth={};
+		cur.lineDate=d3.time.monday(x.invert(xxx));
+		d3.select('#line').attr('x',function(){ return xxx;});
+		d3.selectAll('.lineText').each(function(){maxLineWidth=Math.max(maxLineWidth,lineWidth[this.id]=parseInt(window.getComputedStyle(this,null).getPropertyValue("width")));up(this);})
+		d3.selectAll('.lineText').attr('x',function(){ if (xxx<(size.graph.x2-maxLineWidth)) { return xxx+10;} else return (xxx-5-lineWidth[this.id]); });
+		d3.select('#lineDate').text(function(){ return d3.time.format("%d–")(cur.lineDate)+d3.time.format("%d %B %Y")(d3.time.day.offset(cur.lineDate, +6));});
+		upd.account();
+		//d3.select('#pointer').each(function(){up(this);}); 
+	}}
+function up(t){ t.parentNode.appendChild(t) }
+function isInBox(xy,s){ return ((xy[0]<=s.x2)&&(xy[0]>=s.x)&&(xy[1]<s.y2)&&(xy[1]>=s.y));}
+function svgInit(){
+	function getSize(el){ return {'x':(el.attr('x')?+el.attr('x'):0),'y':(el.attr('y') ? +el.attr('y') : 0),'width':+el.attr('width'),'height':+el.attr('height'),'x2':+el.attr('width')+(el.attr('x')?+el.attr('x'):0),'y2':+el.attr('height')+(el.attr('y') ? +el.attr('y') : 0)};}
+	size.svg=getSize(svg); 	size.graph=getSize(svg.select('#graph_cont')); 	size.words=getSize(svg.select('#words_cont_rect'));
+	intervalTransform=svg.select('#intervalSelect').attr('transform');
+
+	//svg.attr('width','100%');
+	svg.select('#colors').selectAll('rect').each(function () { col[this.id.substring(1)]=d3.select(this).style('fill'); });
+	for (key in barColors) barColors[key]=col[barColors[key]];
+
+	d3.select('#bars').selectAll('rect').transition().attr('width',0).duration(500);
+	d3.select('#av_bars').selectAll('rect').transition().attr('width',0).duration(500);
+
+	for (key in uiKeys) ui[key]=svg.select('#'+key).selectAll('g').style("cursor","pointer");
+		 ui.types.each(function () { cur.types[this.id]={'sel':true,'text':d3.select(this).select('text').text()}; });
+		 ui.backs.each(function () { cur.backs[this.id]={'sel':false}; }); cur.backs['emo_back'].sel=true;
+		 cur.interval={'cur':'by week','interval2':'by day','interval3':'by month'};
+		 //cur.dates={'begin':d3.time.format("%d %B %Y")(new Date()),'end':d3.time.format("%d %B %Y")(new Date())+'   '};
+	cur.select=''; cur.if1cat=' ';
+	svg.on('mousemove',function(){ lineInit(this);});	
+	svg.select('#clickBox').on('click',function(){d3.select(this).style('display','none');m.click.line()})
+	//d3.select('#tweet_text_margin').attr('width',size.graph.x);
+	for (i=0;i<7;i++) d3.select('#tweet_dates').append('div').attr('id','dday'+i).attr('class','inline tw');
+	for (i=0;i<7;i++) d3.select('#tweets').append('div').attr('id','day'+i).attr('class','inline tw');
+	}
+function dataInit(){
+	d3.tsv("cats.csv", function(error, dd){
+		for (i=0;i<(numCatsInit);i++) {
+			cur.cats['cat'+(i+1)]={'sel':false,'name':dd[i].name,'cat':dd[i].cat,'plus':false,'visible':true};
+			data.catsByName[dd[i].cat]=dd[i].name;
+			data.colorByCat[dd[i].cat]=''+(i+1);
+		}
+		cur.cats['cat'+(i+1)]={'sel':false,'name':' + + + ','plus':true,'visible':true}; cur.cats['cat1'].sel=true;
+		i++; for (i;i<6;i++) cur.cats['cat'+(i+1)]={'sel':false,'name':'','plus':false,'visible':false}
+		data.cats=dd;
+		cur.if1cat=dd[0].cat;
+		selCats.push(dd[0].cat);
+		cur.isSelect=false;
+		upd.cats();
+
+		d3.tsv("twitters.csv", function(error, ddd){
+			data.twitters=ddd;
+			data.catByTwitter={};
+			for (i=0;i<data.twitters.length;i++) {
+				data.twittersByName[data.twitters[i].twitter]=data.twitters[i].name;
+				data.catByTwitter[data.twitters[i].twitter]=data.twitters[i].cat;
+				tw2i[data.twitters[i].twitter]=i;
+			}
+			d3.tsv("data.csv", function(error, dddd){
+				data_process(dddd);
+				for (i=0;i<data3.length;i++) {
+						data.time.emo.push(data3[i]);
+						//console.log(tw2i, data3[i].name, tw2i[data3[i].name]);
+						data.twitters[tw2i[data3[i].name]].stat=data3[i].curStat;
+						//showEmoGraph();
+						//pausecomp(200);
+				}
+	//			
+				showEmoGraph();
+
+				d3.tsv("_stat.csv", function(error, ddddd){
+					cl(ddddd);
+					for (i=0;i<ddddd.length;i++) {
+						nn=tw2i[ddddd[i].name];
+						console.log(ddddd[i].name,nn,tw2i);
+						if (tw2i[ddddd[i].name]) {
+							data.twitters[nn].stat.numWords=+ddddd[i].numWords,
+							data.twitters[nn].stat.numUniqWords=+ddddd[i].numUniqWords;
+							ww=ddddd[i].words.split(';');
+							data.twitters[nn].stat.words=[];
+							for (ii=0;ii<(ww.length-1);ii++) {
+								ww[ii]=ww[ii].split(', ');
+								data.twitters[nn].stat.words[ii]={'text':ww[ii][0],'size':+ww[ii][1]};
+							}
+						}
+					}
+				});
+				upd.all();
+			})
+		});
+	});}
+
+d3.xml(svgFile, "image/svg+xml", function(xml) {
+	document.getElementById('graphC').appendChild(xml.documentElement);
+	svg=d3.select('svg');
+
+	svgInit();
+	dataInit(); 
+}); 
+
+</script>
+</body>

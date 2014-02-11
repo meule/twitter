@@ -1,0 +1,105 @@
+<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" id="svg2" height="500" width="240" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<defs class="svg-crowbar"><style type="text/css"><![CDATA[
+body { font-style: normal; font-variant: normal; font-weight: normal; font-size: 12px; line-height: normal; font-family: sans-serif; background-color: rgb(34, 34, 34); color: rgb(255, 255, 255); background-position: initial initial; background-repeat: initial initial; }
+h1 { font-style: normal; font-variant: normal; font-size: 16px; line-height: normal; font-family: sans-serif; font-weight: normal; margin-left: 10px; }
+div.inline { float: left; }
+.tw { width: 130px; font-size: 10px; }
+.clearBoth { clear: both; }
+.axis text { color: rgb(136, 136, 136); display: none; }
+.tick { display: none; }
+.axis path, .axis line { fill: none; stroke: #ffffff; shape-rendering: crispedges; }
+.x.axis path { stroke: #ffffff; }
+.line { fill: none; stroke: #555555; stroke-width: 1.5px; }
+[touch-action="none"] { }
+[touch-action="pan-x"] { }
+[touch-action="pan-y"] { }
+[touch-action="scroll"], [touch-action="pan-x pan-y"], [touch-action="pan-y pan-x"] { }]]></style></defs><metadata id="metadata7">
+
+<rdf:RDF>
+
+<cc:Work about="">
+
+<dc:format>image/svg+xml</dc:format>
+
+<dc:type resource="http://purl.org/dc/dcmitype/StillImage"></dc:type>
+
+<dc:title></dc:title>
+
+</cc:Work>
+
+</rdf:RDF>
+
+</metadata>
+
+<g id="layer1" transform="translate(0,-552.36218)">
+
+<rect id="rect4107" height="500" width="240" y="552.36" x="0" fill="#303030"></rect>
+
+<text id="t_pos" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="620.33234" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796" font-size="12px" y="620.33234" x="18.980103" fill="#ffffff">Позитив</tspan></text>
+
+<text id="t_neg" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="650.33234" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-8" font-size="12px" y="650.33234" x="18.980103" fill="#ffffff">Негатив</tspan></text>
+
+<text id="t_me" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="705.56573" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-1" font-size="12px" y="705.56573" x="18.980103" fill="#ffffff">"Я"</tspan></text>
+
+<text id="t_we" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="739.40588" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-8-2" font-size="12px" y="739.40588" x="18.980103" fill="#ffffff">"Мы"</tspan></text>
+
+<text id="t_sure" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="830.33234" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-2" font-size="12px" y="830.33234" x="18.980103" fill="#ffffff">Уверенность</tspan></text>
+
+<text id="t_unsure" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="860.33234" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-8-6" font-size="12px" y="860.33234" x="18.980103" fill="#ffffff">Неуверенность</tspan></text>
+
+<text id="t_they" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="773.24597" x="18.980103" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-18" font-size="12px" y="773.24597" x="18.980103" fill="#ffffff">"Они"</tspan></text>
+
+<text id="t_conv" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="12px" font-style="normal" font-stretch="normal" font-variant="normal" y="1027.0562" x="18.980103" font-family="PT Sans" line-height="125%" fill="#ffffff"><tspan id="tspan3796-8-3" y="1027.0562" x="18.980103">Разговорный</tspan><tspan id="tspan3993" y="1042.0562" x="18.980103">язык</tspan></text>
+
+<g id="bars_all" fill="#777">
+
+<rect id="av_pos" height="20" width="15.499132993820702" y="607.36" x="109.87"></rect>
+
+<rect id="av_neg" height="20" width="8.459341731624951" y="637.36" x="109.87"></rect>
+
+<rect id="av_me" height="20" width="5.912278118333017" y="692.6" x="109.87"></rect>
+
+<rect id="av_we" height="20" width="12.504439903740748" y="726.44" x="109.87"></rect>
+
+<rect id="av_sure" height="20" width="18.21696189841806" y="817.36" x="109.87"></rect>
+
+<rect id="av_unsure" height="20" width="7.797219969869208" y="847.36" x="109.87"></rect>
+
+<rect id="av_they" height="20" width="16.224394038306354" y="760.28" x="109.87"></rect>
+
+<rect id="av_conv" height="20" width="70.46853749964909" y="1020.4" x="109.87"></rect>
+
+</g>
+
+<g id="bars_sel" fill="#f0a040">
+
+<rect id="pos" height="10" width="18.48160498148523" y="612.36" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="neg" height="10" width="30.397376614284923" y="642.36" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="me" height="10" width="2.545674203216634" y="697.6" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="we" height="10" width="6.205080870340545" y="731.44" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="sure" height="10" width="13.260659067857729" y="822.36" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="unsure" height="10" width="3.315164766964432" y="852.36" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="they" height="10" width="41.208101164569264" y="765.28" x="109.87" style="fill: #b3adf7;"></rect>
+
+<rect id="conv" height="10" width="90.03097065682083" y="1025.4" x="109.87" style="fill: #b3adf7;"></rect>
+
+</g>
+
+<flowRoot id="flowRoot4028" style="text-anchor:start;letter-spacing:0px;word-spacing:0px;text-align:start;writing-mode:lr;" font-weight="normal" xml:space="preserve" font-size="40px" line-height="125%" font-stretch="normal" font-variant="normal" font-style="normal" font-family="PT Sans" fill="black"><flowRegion id="flowRegion4030"><rect id="rect4032" y="308.57" width="202.14" x="19.286" height="135"></rect></flowRegion><flowPara id="flowPara4034"></flowPara></flowRoot>
+
+<flowRoot id="flowRoot4036" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" font-weight="normal" xml:space="preserve" font-size="40px" transform="translate(0,609.50503)" font-stretch="normal" font-variant="normal" font-style="normal" font-family="PT Sans" fill="#000000"><flowRegion id="flowRegion4038"><rect id="rect4040" y="307.86" width="200.71" x="20" height="135"></rect></flowRegion><flowPara id="words" font-size="14px" fill="#ffffff">aaa</flowPara></flowRoot>
+
+<text id="account" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="12px" font-style="normal" font-stretch="normal" font-variant="normal" y="579.90234" x="108.85365" font-family="PT Sans" line-height="125%" fill="#b3adf7">RFdeti</text>
+
+<text id="t_unsure-1" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-weight="normal" xml:space="preserve" font-size="40px" font-style="normal" font-stretch="normal" font-variant="normal" y="906.71283" x="20.030273" font-family="PT Sans" line-height="125%" fill="#000000"><tspan id="tspan3796-8-6-3" font-size="12px" y="906.71283" x="20.030273" fill="#ffffff">Частоупотребляемые слова</tspan></text>
+
+</g>
+
+<g width="240px" height="100px" x="0px" y="860px" id="wordCloud"><g transform="translate(120,410)"><text text-anchor="middle" transform="translate(58,6)rotate(0)" style="font-size: 9.04503105590062px; fill: #b3adf7;">детей</text><text text-anchor="middle" transform="translate(-20,16)rotate(0)" style="font-size: 8.788819875776397px; fill: #b3adf7;">ребенка</text><text text-anchor="middle" transform="translate(-55,-1)rotate(0)" style="font-size: 8.788819875776397px; fill: #b3adf7;">рф</text><text text-anchor="middle" transform="translate(-68,-23)rotate(0)" style="font-size: 8.74223602484472px; fill: #b3adf7;">обл</text><text text-anchor="middle" transform="translate(56,25)rotate(0)" style="font-size: 8.74223602484472px; fill: #b3adf7;">уполномоченного</text><text text-anchor="middle" transform="translate(-44,-14)rotate(0)" style="font-size: 8.74223602484472px; fill: #b3adf7;">уполномоченный</text><text text-anchor="middle" transform="translate(68,17)rotate(0)" style="font-size: 8.718944099378882px; fill: #b3adf7;">области</text><text text-anchor="middle" transform="translate(62,-9)rotate(0)" style="font-size: 8.718944099378882px; fill: #b3adf7;">семьи</text><text text-anchor="middle" transform="translate(7,7)rotate(0)" style="font-size: 8.718944099378882px; fill: #b3adf7;">сша</text><text text-anchor="middle" transform="translate(-12,2)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">дет</text><text text-anchor="middle" transform="translate(-15,30)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">2011г</text><text text-anchor="middle" transform="translate(1,-25)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">россии</text><text text-anchor="middle" transform="translate(54,-17)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">родителей</text><text text-anchor="middle" transform="translate(63,32)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">детьми</text><text text-anchor="middle" transform="translate(59,-25)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">2012г</text><text text-anchor="middle" transform="translate(13,35)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">прав</text><text text-anchor="middle" transform="translate(35,17)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">лет</text><text text-anchor="middle" transform="translate(32,-25)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">всех</text><text text-anchor="middle" transform="translate(48,41)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">правам</text><text text-anchor="middle" transform="translate(-81,4)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">более</text><text text-anchor="middle" transform="translate(-33,-1)rotate(0)" style="font-size: 8.695652173913043px; fill: #b3adf7;">дети</text></g></g></svg>

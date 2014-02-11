@@ -1,0 +1,48 @@
+<!DOCTYPE html> <head> <meta charset="utf-8">
+<script type="text/javascript" src="d3.v3.js"></script>
+</head>
+<body>
+
+<script>
+
+var margin = {top: 35, right: 8, bottom: 7, left: 245},
+    width = 1200 - margin.left - margin.right,
+    height = 570 - margin.top - margin.bottom,
+    bar_len=130;
+
+var svg = d3.select("body").append("svg")
+	.attr('fill','#852')
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+svg.append('rect')
+	    .attr('fill','#852')
+	    .attr("width", 50)
+	    .attr("height", 50)
+	    .attr("x", 25)
+	    .attr("y", 25)
+	    .attr('id','r');
+svg.append('rect')
+	    .attr('fill','#392')
+	    .attr("width", 50)
+	    .attr("height", 50)
+	    .attr("x", 125)
+	    .attr("y", 25)
+	    .attr('id','r');
+
+var box_status=[true,true];
+
+console.log(box_status);
+
+svg.selectAll('rect')
+	.data(box_status)
+	.enter();
+svg.selectAll('rect')
+	.style('display',function(d){console.log(d);if (d){return 'inline'} else return 'none'})
+	.on('click',function(d){
+		box_status[0]=!box_status[0];
+		svg.selectAll('rect')
+		.data(box_status).style('display',function(d){console.log(d);if (d){return 'inline'} else return 'none'}); console.log(d,box_status)});
+
+</script>
+</body>

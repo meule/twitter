@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg id="svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" height="570" width="1200" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
+	<metadata id="metadata7">
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:format>image/svg+xml</dc:format>
+				<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+				<dc:title/>
+			</cc:Work>
+		</rdf:RDF>
+	</metadata>
+	<g id="cats">
+		<g id="cat2" transform="translate(257.33786,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985-9" height="21.183" width="110.18" stroke="#b3adf7" y="1030.8" x="109.07" stroke-width="0.81662" fill="#b3adf7"/>
+			<text id="text3801" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1048.1902" x="163.94142" font-weight="normal" font-style="normal" fill="#c0c0c0"><tspan id="tspan3803" font-size="11px" style="text-anchor:middle;text-align:center;" y="1045.1902" x="163.94142" fill="#202020">Russian Politics</tspan></text>
+		</g>
+		<g id="cat3" transform="translate(267.67786,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985" height="21.183" width="110.18" stroke="#f8b4f6" y="1030.8" x="217.73" stroke-width="0.81662" fill="none"/>
+			<text id="text3801-4" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1047.1781" x="272.89297" font-weight="normal" font-style="normal" fill="#f8b4f6"><tspan id="tspan3803-8" font-size="11px" style="text-anchor:middle;text-align:center;" y="1044.1781" x="272.89297" fill="#f8b4f6">Opposition</tspan></text>
+		</g>
+		<g id="cat4" transform="translate(278.01787,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985-1" height="21.183" width="110.18" stroke="#f69ac3" y="1030.8" x="326.39" stroke-width="0.81662" fill="none"/>
+			<text id="text3801-8" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1048.1902" x="381.39349" font-weight="normal" font-style="normal" fill="#f69ac3"><tspan id="tspan3803-2" font-size="11px" style="text-anchor:middle;text-align:center;" y="1045.1902" x="381.39349" fill="#f69ac3">Businessmen</tspan></text>
+		</g>
+		<g id="cat1" transform="translate(247.00001,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985-9-1" height="21.183" width="110.18" stroke="#addef7" y="1030.8" x="0.40831" stroke-width="0.81662" fill="none"/>
+			<text id="text3801-11" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1046.2122" x="55.097668" font-weight="normal" font-style="normal" fill="#9bd7f5"><tspan id="tspan3803-52" font-size="11px" style="text-anchor:middle;text-align:center;" y="1045.2122" x="55.097668" fill="#9bd7f5">Russian Goverment</tspan></text>
+		</g>
+		<g id="cat5" transform="translate(288.35787,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985-7" height="21.183" width="110.18" stroke="#f6b49a" y="1030.8" x="435.05" stroke-width="0.81662" fill="none"/>
+			<text id="text3801-8-5" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1048.2122" x="490.26801" font-weight="normal" font-style="normal" fill="#f6b49a"><tspan id="tspan3803-2-5" font-size="11px" style="text-anchor:middle;text-align:center;" y="1045.2122" x="490.26801" fill="#f6b49a">Showmen</tspan></text>
+		</g>
+		<g id="cat6" transform="translate(298.69787,-1025.8246)" onmouseover="catOver(this.id)" onmouseout="catOut(this.id)" onclick="catClick(this.id)">
+			<rect id="rect2985-4" height="21.183" width="110.18" stroke="#f3f69a" y="1030.8" x="543.71" stroke-width="0.81662" fill="none"/>
+			<text id="text3801-8-1" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1047.1781" x="598.79858" font-weight="normal" font-style="normal" fill="#f3f69a"><tspan id="tspan3803-2-7" font-size="11px" style="text-anchor:middle;text-align:center;" y="1044.1781" x="598.79858" font-weight="bold" fill="#f3f69a">+</tspan></text>
+		</g>
+	</g>
+	<g id="types" transform="translate(161.55927,-1017.8247)">
+		<g id="tweetButton" onmouseover="tweetTypesOver(this.id)" onclick="tweetTypesClick(this.id)" onmouseout="tweetTypesOut(this.id)" transform="translate(92.07859,-8.0189232)">
+			<rect id="rect2985-0-7-4" height="21.412" width="49.536" stroke="#969696" y="1030.7" x="745.02" stroke-width="0.5505" fill="#969696"/>
+			<text id="text3801-45-9" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1048.4124" x="769.82208" font-weight="normal" font-style="normal" fill="#202020"><tspan id="tspan3803-5-4" font-size="10px" style="text-anchor:middle;text-align:center;" y="1044.4124" x="769.82208" fill="#202020">tweet</tspan></text>
+		</g>
+		<g id="RTButton" onmouseover="tweetTypesOver(this.id)" onclick="tweetTypesClick(this.id)" onmouseout="tweetTypesOut(this.id)" transform="translate(48.469164,-8.003082)">
+			<rect id="rect2985-0-7" height="21.567" width="29.645" stroke="#969696" y="1030.6" x="840.16" stroke-width="0.4274" fill="none"/>
+			<text id="text3801-45-9-8" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1048.9023" x="854.638" font-weight="normal" font-style="normal" fill="#969696"><tspan id="tspan3803-5-4-8" font-size="10px" style="text-anchor:middle;text-align:center;" y="1044.9023" x="854.638" fill="#969696">RT</tspan></text>
+		</g>
+		<g id="replyButton" onmouseover="tweetTypesOver(this.id)" onclick="tweetTypesClick(this.id)" onmouseout="tweetTypesOut(this.id)" transform="matrix(0.99760832,0,0,1.0002947,21.222581,-8.3070179)">
+			<rect id="rect2985-0-7-0" height="21.567" width="29.645" stroke="#969696" y="1030.6" x="901.15" stroke-width="0.4274" fill="none"/>
+			<text id="text3801-45-9-2" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1047.8374" x="915.59869" font-weight="normal" font-style="normal" fill="#969696"><tspan id="tspan3803-5-4-4" font-size="10px" style="text-anchor:middle;text-align:center;" y="1043.8374" x="915.59869" fill="#969696">reply</tspan></text>
+		</g>
+	</g>
+	<g id="interval" onmouseover="dateIntervalHover(this.id)" onmouseout="dateIntervalOut(this.id)" onclick="dateIntervalClick(this.id)" transform="translate(396.61698,-1025.9252)">
+		<rect id="date_interval_button" height="21.313" width="69.35" stroke="#969696" y="1030.7" x="724.71" stroke-width="0.64985" fill="#969696"/>
+		<text id="date_interval_text" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:middle;word-spacing:0px;text-align:center;" font-stretch="normal" font-variant="normal" y="1047.8811" x="758.99805" font-weight="normal" font-style="normal" fill="#202020"><tspan id="tspan3803-5-4-7" font-size="10px" style="text-anchor:middle;text-align:center;" dy="0 0 0 0 0 0 0 0 0 4.2599988 -4.2599988" y="1043.8811" x="758.99805" fill="#202020">by weeks <tspan id="tspan7724" font-size="16px" dy="6.6300015 -6.6300015"><tspan id="tspan7726" font-size="20px" dy="10.309996 -10.309996">ˇ </tspan></tspan></tspan></text>
+	</g>
+	<rect id="line" height="501.37" width="0.36286" stroke="#FFF" stroke-dasharray="none" stroke-miterlimit="4" y="62.004" x="822.65" stroke-width="0.62801" fill="none"/>
+	<text id="lineDate" font-size="12.14293575px" transform="scale(0.9950216,1.0050033)" class="lineText" y="71.492775" x="832.01385" fill="#ffffff">29-04 November 2012</text>
+	<text id="lineName2" font-size="12.14293575px" transform="scale(0.9950216,1.0050033)" class="lineText" y="558.46918" x="832.01385" fill="#b3adf7">rosnano_ru</text>
+	<text id="lineName" font-size="12.14293575px" transform="scale(0.9950216,1.0050033)" class="lineText" y="82.060165" x="832.01385" fill="#b3adf7">rosnano_ru</text>
+	<g id="dates" transform="matrix(1.0068736,0,0,1.0169742,254.9607,34.18943)">
+		<g id="g12593" transform="matrix(0.99936348,0,0,1.0413173,13.185609,16.048861)">
+			<text id="endDate" style="text-anchor:end;text-align:right;" onmouseout="endDateOut(this.id)" font-size="12px" class="xright" width="83" onmouseover="endDateOver(this.id)" onclick="endDateClick(this.id)" y="7.0834723" x="912.45868" fill="#555555">18 August 2013</text>
+			<rect id="end_line" class="xright" width="0.99317" y="-4.1966" x="916.05" height="15.733" fill="#555">17 August 2013</rect>
+		</g>
+		<g id="beginDate" transform="translate(-831.17064,16.525513)">
+			<text id="begin_date_text" font-size="12px" onmouseout="beginDateOut(this.id)" style="text-anchor:end;text-align:right;" class="xright" width="83" onmouseover="beginDateOver(this.id)" onclick="beginDateClick(this.id)" y="7.0054412" x="912.45868" fill="#555555">18 August 2013</text>
+			<rect id="begin_line" width="0.99317" y="-4.1966" x="823.26" height="15.733" class="xright" fill="#555">17 August 2013</rect>
+		</g>
+	</g>
+	<text id="account" font-size="12px" font-family="PT Sans" onmouseout="accountOut(this.id)" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-style="normal" font-stretch="normal" xml:space="preserve" onmouseover="accountOver(this.id)" onclick="accountClick(this.id)" font-variant="normal" y="57.831329" x="127.28003" font-weight="normal" line-height="125%" fill="#b3adf7"><tspan id="tspan8122" font-weight="bold">RFdeti</tspan></text>
+	<text id="account-3" font-size="12px" font-family="PT Sans" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-style="normal" font-stretch="normal" xml:space="preserve" font-variant="normal" y="57.831329" x="18.980103" font-weight="normal" line-height="125%" fill="#ffffff"><tspan id="tspan8120" font-weight="bold">Account</tspan></text>
+	<g id="bars" transform="translate(0,-5.5e-4)">
+		<rect id="pos" height="8" width="18.482" y="81.329" x="128" fill="#b3adf7"/>
+		<rect id="neg" height="8" width="30.397" y="107.33" x="128" fill="#7367f0"/>
+		<rect id="sure" height="8" width="13.261" y="245.75" x="128" fill="#b3adf7"/>
+		<rect id="unsure" height="8" width="3.3152" y="271.75" x="128" fill="#7367f0"/>
+		<rect id="me" height="8" width="2.5457" y="146.58" x="128" fill="#b3adf7"/>
+		<rect id="we" height="8" width="6.2051" y="177.08" x="128" fill="#b3adf7"/>
+		<rect id="they" height="8" width="41.208" y="206.58" x="128" fill="#b3adf7"/>
+		<rect id="conv" height="8" width="90.031" y="313.82" x="128" fill="#b3adf7"/>
+		<rect id="conv-6" height="8" width="6.062" y="340.08" x="128" fill="#b3adf7"/>
+	</g>
+	<g id="av_bars" fill="#777" transform="translate(0,-5.5e-4)">
+		<rect id="av_pos" height="8" width="15.499" y="72.673" x="128"/>
+		<rect id="av_neg" height="8" width="8.4593" y="98.329" x="128"/>
+		<rect id="av_sure" height="8" width="18.217" y="236.75" x="128"/>
+		<rect id="av_unsure" height="8" width="7.7972" y="262.75" x="128"/>
+		<rect id="av_me" height="8" width="5.9123" y="137.82" x="128"/>
+		<rect id="av_we" height="8" width="12.504" y="167.16" x="128"/>
+		<rect id="av_they" height="8" width="16.224" y="197.5" x="128"/>
+		<rect id="av_conv" height="8" width="70.469" y="304.82" x="128"/>
+		<rect id="av_conv-2" height="8" width="44.781" y="331.08" x="128"/>
+	</g>
+	<g id="bar_backs" transform="translate(0,-5.5e-4)">
+		<g id="emo_back" emo_back="" onmouseout="barBacksOut(this.id)" emo="" transform="translate(0,4.5005796)" onmouseover="barBacksOver(this.id)" onclick="barBacksClick(this.id)">
+			<path id="path8086" d="m238.64,86.393,0,10.714,7.7143-5.3571z"/>
+			<rect id="rect2985-0-7-4-4" height="58.862" width="228.86" stroke="#404040" stroke-dasharray="none" stroke-miterlimit="4" y="60.069" x="9.5688" stroke-width="1.138"/>
+		</g>
+		<g id="sure_back" onmouseover="barBacksOver(this.id)" onmouseout="barBacksOut(this.id)" onclick="barBacksClick(this.id)" transform="translate(8.7797642e-5,168.60019)">
+			<path id="path8086-1-8" d="m238.64,84.293,0,10.714,7.7143-5.3571z"/>
+			<rect id="rect2985-0-7-4-4-1-1" height="58.565" width="228.87" stroke="#404040" stroke-dasharray="none" stroke-miterlimit="4" y="60.368" x="9.5674" stroke-width="1.1349"/>
+		</g>
+		<g id="me_back" onmouseover="barBacksOver(this.id)" onmouseout="barBacksOut(this.id)" onclick="barBacksClick(this.id)" transform="translate(4.1663647e-5,71.200377)">
+			<rect id="rect2985-0-7-4-4-1" height="89.597" width="228.6" stroke="#404040" stroke-dasharray="none" stroke-miterlimit="4" y="60.202" x="9.7014" stroke-width="1.403"/>
+			<path id="path8086-1" fill="none" d="m238.64,99.643,0,10.714,7.7143-5.3571z"/>
+		</g>
+		<g id="conv_back" onmouseout="barBacksOut(this.id)" transform="translate(0,-39.450512)" onmouseover="barBacksOver(this.id)" onclick="barBacksClick(this.id)" lang_back="">
+			<path id="path8086-1-1" d="m238.64,358.89,0,10.714,7.7143-5.3571z"/>
+			<rect id="rect2985-0-7-4-4-1-7" height="58.862" width="228.86" stroke="#404040" stroke-dasharray="none" stroke-miterlimit="4" y="334.82" x="9.569" stroke-width="1.1378"/>
+		</g>
+		<g id="words_back" onmouseover="barBacksOver(this.id)" onmouseout="barBacksOut(this.id)" onclick="barBacksClick(this.id)" transform="translate(0,-4.6491623e-6)">
+			<rect id="rect2985-0-7-4-4-1-7-2" transform="scale(1,-1)" height="117.89" width="228.39" stroke="#404040" stroke-dasharray="none" stroke-miterlimit="4" y="-480.2" x="9.8043" stroke-width="1.6086"/>
+			<path id="path8086-1-9" fill="none" d="m238.64,415.89,0,10.714,7.7143-5.3571z"/>
+		</g>
+	</g>
+	<g id="values_names" font-family="PT Sans" transform="translate(0,-5.5e-4)" font-style="normal" font-stretch="normal" font-variant="normal" font-weight="normal">
+		<text id="t_pos" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="85.128799" x="18.980103" fill="#ffffff"><tspan id="tspan3796" font-size="12px" y="85.128799" x="18.980103" fill="#ffffff">Позитив</tspan></text>
+		<text id="t_neg" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="110.95692" x="18.980103" fill="#ffffff"><tspan id="tspan3796-8" font-size="12px" y="110.95692" x="18.980103" fill="#ffffff">Негатив</tspan></text>
+		<text id="t_sure" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="248.25031" x="18.980103" fill="#000000"><tspan id="tspan3796-2" font-size="12px" y="248.25031" x="18.980103" fill="#ffffff">Уверенность</tspan></text>
+		<text id="t_unsure" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="274.22046" x="18.980103" fill="#000000"><tspan id="tspan3796-8-6" font-size="12px" y="274.22046" x="18.980103" fill="#ffffff">Неуверенность</tspan></text>
+		<text id="t_me" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="150.44853" x="18.980057" fill="#000000"><tspan id="tspan3796-1" font-size="12px" y="150.44853" x="18.980057" fill="#ffffff">&quot;Я&quot;</tspan></text>
+		<text id="t_we" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="180.28448" x="18.980057" fill="#000000"><tspan id="tspan3796-8-2" font-size="12px" y="180.28448" x="18.980057" fill="#ffffff">&quot;Мы&quot;</tspan></text>
+		<text id="t_they" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="210.24059" x="18.980057" fill="#000000"><tspan id="tspan3796-18" font-size="12px" y="210.24059" x="18.980057" fill="#ffffff">&quot;Они&quot;</tspan></text>
+		<text id="t_conv" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="100%" xml:space="preserve" font-size="12px" y="310.01147" x="18.980103" fill="#ffffff"><tspan id="tspan3796-8-3" y="310.01147" x="18.980103">Разговорный</tspan><tspan id="tspan3993" y="325.01147" x="18.980103">язык</tspan></text>
+		<text id="t_conv-0" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="12px" y="343.85083" x="18.200073" fill="#ffffff">MAT</text>
+		<text id="t_unsure-1" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" line-height="125%" xml:space="preserve" font-size="40px" y="378.70007" x="18.319824" fill="#000000"><tspan id="tspan3796-8-6-3" font-size="12px" y="378.70007" x="18.319824" fill="#ffffff">Частоупотребляемые слова</tspan></text>
+	</g>
+	<text id="page_title" font-size="14px" line-height="125%" font-family="PT Sans" xml:space="preserve" style="writing-mode:lr-tb;letter-spacing:0px;text-anchor:start;word-spacing:0px;text-align:start;" font-stretch="normal" font-variant="normal" y="20.369904" x="-49.39856" font-weight="normal" font-style="normal" fill="#969696"><tspan id="tspan3803-52-7" font-size="16px" style="text-anchor:start;text-align:start;" y="19.369904" x="18.692017" fill="#969696">Twitter EmoAnalyze</tspan></text>
+	<rect id="graph_cont" height="528" width="946" y="35" x="247" fill="none"/>
+	<g id="words_cont">
+		<rect id="words_cont_rect" class="" width="211.73" y="381.63" x="19.633" height="91.734" fill="none"/>
+	</g>
+	<g id="colors" display="none">
+		<rect id="c2" height="21.442" width="50.693" y="201.29" x="361.03" fill="#bbb6f8"/>
+		<rect id="c3" height="21.442" width="50.693" y="201.29" x="415.78" fill="#f8b4f6"/>
+		<rect id="c4" height="21.442" width="50.693" y="201.29" x="470.53" fill="#f69ac3"/>
+		<rect id="c1" height="21.442" width="50.693" y="201.29" x="306.28" fill="#addef7"/>
+		<rect id="c5" height="21.442" width="50.693" y="201.29" x="525.28" fill="#f6b49a"/>
+		<rect id="c6" height="21.442" width="50.693" y="201.29" x="580.03" fill="#f3f69a"/>
+		<rect id="cLight" height="21.412" width="49.536" y="201.29" x="691.23" fill="#909090"/>
+		<rect id="cGrey" height="24" width="49.499" y="231.29" x="691.25" fill="#606060"/>
+		<rect id="cMain" height="21.412" width="49.536" y="201.29" x="635.23" fill="#FFF"/>
+		<rect id="c2d" height="21.442" width="50.693" y="232.28" x="363.51" fill="#786df1"/>
+		<rect id="c3d" height="21.442" width="50.693" y="232.78" x="417.26" fill="#f16bed"/>
+		<rect id="c4d" height="21.442" width="50.693" y="232.28" x="473" fill="#ef5197"/>
+		<rect id="c1d" height="21.442" width="50.693" y="232.28" x="308.76" fill="#52b9ee"/>
+		<rect id="c5d" height="21.442" width="50.693" y="232.28" x="527.75" fill="#ef7d51"/>
+		<rect id="c6d" height="21.442" width="50.693" y="232.28" x="582.5" fill="#eaef51"/>
+		<rect id="cBack" height="21.412" width="49.536" y="231.28" x="637.71" fill="#101010"/>
+	</g>
+</svg>

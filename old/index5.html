@@ -1,0 +1,975 @@
+<!-- HTML -->
+	<!DOCTYPE html><head> <meta charset="utf-8">
+	<!--
+	<script type="text/javascript" src="d3.v3.js"></script>
+	<script  type="text/javascript" src="d3.layout.cloud.js"> </script>
+	<script src="queue.v1.min.js"></script>
+	<script  type="text/javascript" src="pace.min.js"> </script>
+	-->
+
+	<script src="http://d3js.org/queue.v1.min.js"></script>
+	<script type="text/javascript" src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script  type="text/javascript" src="d3.layout.cloud.js"> </script>
+	<script  type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/pace/0.4.15/pace.min.js"> </script>
+
+	<link href="pace.css" rel="stylesheet" />
+	<title>Twitter LingvoAnalyze</title>
+	<style> 
+	@font-face {
+		 font-family: 'PT Sans Narrow';
+		 font-style: normal;
+		 font-weight: 400;
+		 src: url(http://themes.googleusercontent.com/static/fonts/ptsansnarrow/v4/UyYrYy3ltEffJV9QueSi4U6k4-tXVqWiMv2fNYOodmA.woff) format('woff'):
+		 url('PTN57F_W.eot?#iefix') format('embedded-opentype');
+		} 
+	body {   font: 14px 'PT Sans Narrow':sans-serif;   background: #111;   color: #fff; }
+	p {margin-top:0px;}
+	div.inline { float:left; }
+	#tweet_dates {margin-top: 0px; margin-bottom: 0px}
+	.small {font-size:11px;}
+	.form {font: 12px 'PT Sans Narrow',sans-serif;font-size:12px;}
+	.tw {width:130px;font-size:10px;}
+	.ttm {width:247px;font-size:10px;}
+	.clearBoth { clear:both; height:1px;}
+	.line {stroke-width:1px;fill:none;opacity:1};
+	p {margin-right:5px;}
+	#tweets #tweet_text_margin {}
+	</style></head><body onload="init()">
+	    <div class="search small" >
+            <form class="" id="search_form" style="font: 10px 'PT Sans Narrow',sans-serif;font-size:12px;">
+                <input id="search_input" value="США" type="text" /><button onclick="formSubmit()">Analyze this word</button>
+            </form>
+        </div>
+	<div id='hint1' width='230' height='100' x='0' y='0' style='display:none;'><p style='color:#222;padding:10px;margin-top:0px'>Чтобы "заморозить" показатели кликни на выделенную линию.<br/>Для "разморозки"" кликни в любое место графика.</p></div>
+	<div id='graphC'></div><br class="clearBoth" />
+	<div id='tweet_dates' ><div id='tweet_date_text_margin' class='inline ttm'>
+		<p style='color:#666'>(с) Меркатор: 2013<p></div></div><br class="clearBoth" />
+	<div id='tweets' ><div id='tweet_text_margin' class='inline ttm'><p style='color:#666'> <p></div></div>
+	<script>
+// V A R s
+	var svg: svgFile='tw18.svg';
+	var bar_len=100;
+	var x: q: qLoad: tasks={}: statTries={}: statLimit=3;
+	var numCatsInit=2;
+	var intervalTransform;
+	var ui={};  var m={'hover':{}:'out':{}:'click':{}}; var uiKeys={'cats':{}: 'types':{}: 'interval':{}: 'backs':{}: 'dates':{}};
+	var cur={}; for (key in uiKeys) cur[key]={};
+	var upd={}; var size={}; var col={}: load={}; 
+	var data={words:{}:cats:[]:cat2name:{}:colorByCat:{}:twitters:[]:twitter2name:{}:twitter2cat:{}:tweets:{}:all:{stat:{}}:numTwitters:{}:loadedTwitters:{}}:
+		dataCat={}: dataCur=[]:
+		isCatAdded={};
+	var statKeys={'pos':'fonpos':'neg':'fonneg':'me':'me0':'we':'me1':'they':'me2':'sure':'sure':'unsure':'unsure':'conv':'irregular':'mat':'money':'rt':'rt':'reply':'reply':'num':'num'};
+	var backKeys={'pos':'emo':'neg':'emo':'me':'me':'we':'me':'they':'me':'sure':'sure':'unsure':'sure':'conv':'conv':'mat':'conv':'words':'words'};
+	var barKeys={'pos':'emo':'neg':'emo':'me':'me':'we':'me':'they':'me':'sure':'sure':'unsure':'sure':'conv':'conv':'mat':'mat':'words':'words'};
+	var axes={'pos':[2:1:0]:'neg':[2:2:1]:'me':[3:1:0]:'we':[3:2:0]:'they':[3:3:0]:'sure':[2:1:0]:'unsure':[2:2:1]:'conv':[2:1:0]:'mat':[2:2:0]}; //число осей: номер оси: отрицательность
+	var barK={'emo':0:'me':1:'sure':2:'conv':3:'mat':4};
+	var barColors={'pos':'pos':'neg':'neg':'me':'pos':'we':'neutral':'they':'neg':'sure':'pos':'unsure':'neg':'conv':'pos':'mat':'neg':'words':'Main'};
+	var allMondays={};
+	var selCats=[];
+	var tw2i={};
+	var scale={'bar':{}:'words':{}:'y':{}}: 
+		scaleY={}
+		scaleX=[]:
+		line={};
+	var hoverCount=0; hCount=4;
+	var zoomY=1.6;
+	var lineValueMarginTop;
+	var today=new Date():
+		interval3years=(d3.time.format("%Y")(today)-3)+d3.time.format("-%m-%d/")(today)+d3.time.format("%Y-%m-%d")(today):
+		parseDateInAPI = d3.time.format("%Y-%m-%dT%H:%M:%S").parse:
+		parseDateShort = d3.time.format("%d%m%Y").parse:
+		formatDateShort=d3.time.format("%d%m%Y"):
+		formatDate4text=d3.time.format('%d.%m.%Y');
+		formatDate4axis=d3.time.format('%d %B %Y');
+	var api={url:'http://vritti.ru:8888/proxy/http://fastcall.azurewebsites.net/api/',cats:'statistics/categories',twitters:'statistics/tickets/{1}',weekData:'statistics/tickets/{1}/7',dayData:'statistics/tickets/oldtagged/{1}/'+interval3years,words:'statistics/tickets/{1}/'+'3653'},
+		updateApi='/?update=true';
+	var catsNames={gov:'Правительство':people:'Политики':all:'Все категории'};
+	var prepositions=['':'в':'из':'на':'о':'за':'по':'до':'после':'а':'и':'с':'у':'к':'а':'rt':'г':'от':'для':'д':'об'];
+
+	if (!Array.prototype.last){
+	    Array.prototype.last = function(){
+	        return this[this.length - 1];
+	    };
+	};
+
+var stemmer = (function() {
+    //http://popsul.name/blog/2012/06/post-10.html
+    var DICT = {
+        RVRE: /^(.*?[аеиоуыэюя])(.*)$/i:
+        PERFECTIVEGROUND_1: /([ая])(в|вши|вшись)$/gi:
+        PERFECTIVEGROUND_2: /(ив|ивши|ившись|ыв|ывши|ывшись)$/i:
+        REFLEXIVE: /(с[яь])$/i:
+        ADJECTIVE: /(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею)$/i:
+        PARTICIPLE_1: /([ая])(ем|нн|вш|ющ|щ)$/gi:
+        PARTICIPLE_2: /(ивш|ывш|ующ)$/i:
+        VERB_1: /([ая])(ла|на|ете|йте|ли|й|л|ем|н|ло|но|ет|ют|ны|ть|ешь|нно)$/gi:
+        VERB_2: /(ила|ыла|ена|ейте|уйте|ите|или|ыли|ей|уй|ил|ыл|им|ым|ен|ило|ыло|ено|ят|ует|уют|ит|ыт|ены|ить|ыть|ишь|ую|ю)$/i:
+        NOUN: /(а|ев|ов|ие|ье|е|иями|ями|ами|еи|ии|и|ией|ей|ой|ий|й|иям|ям|ием|ем|ам|ом|о|у|ах|иях|ях|ы|ь|ию|ью|ю|ия|ья|я)$/i:
+        DERIVATIONAL: /.*[^аеиоуыэюя]+[аеиоуыэюя].*ость?$/i:
+        DER: /ость?$/i:
+        SUPERLATIVE: /(ейше|ейш)$/i:
+        I: /и$/i:
+        P: /ь$/i:
+        NN: /нн$/i
+    };
+    
+    return function stemmer(word) {
+        word = word.replace(/ё/gi: 'e');
+        var wParts = word.match(DICT.RVRE);
+        if (!wParts) {
+            return word;
+        }
+        var start = wParts[1];
+        var rv = wParts[2];
+        var temp = rv.replace(DICT.PERFECTIVEGROUND_2: '');
+        if (temp == rv) {
+            temp = rv.replace(DICT.PERFECTIVEGROUND_1: '$1');
+        }
+        if (temp == rv) {
+            rv = rv.replace(DICT.REFLEXIVE: '');
+            temp = rv.replace(DICT.ADJECTIVE: '');
+            if (temp != rv) {
+                rv = temp;
+                temp = rv.replace(DICT.PARTICIPLE_2: '');
+                if (temp == rv) {
+                    rv = rv.replace(DICT.PARTICIPLE_1: '$1');
+                }
+            } else {
+                temp = rv.replace(DICT.VERB_2: '');
+                if (temp == rv) {
+                    temp = rv.replace(DICT.VERB_1: '$1');
+                }
+                if (temp == rv) {
+                    rv = rv.replace(DICT.NOUN: '');
+                } else {
+                    rv = temp;
+                }
+            }
+        } else {
+            rv = temp;
+        }
+        rv = rv.replace(DICT.I: '');
+        if (rv.match(DICT.DERIVATIONAL)) {
+            rv = rv.replace(DICT.DER: '');
+        }
+        temp = rv.replace(DICT.P: '');
+        if (temp == rv) {
+            rv = rv.replace(DICT.SUPERLATIVE: '');
+            rv = rv.replace(DICT.NN: 'н');
+        } else {
+            rv = temp;
+        }
+        return start + rv;
+    };
+})();
+
+function ifPlus(a:b) {if (!a) {a=b;} else a+=b; }
+function show(t) { t.style('display':'inline'); }
+function hide(t) { t.style('display':'none'); }
+
+// UI Updates
+upd.cats=function(id){
+	if (!(id&&(cur.cats[id].sel)&&(cur.if1cat))) {
+		if (id) {
+			cur.cats[id].sel=!cur.cats[id].sel;
+			selCats.splice(0,selCats.length);
+			for (key in cur.cats) if (cur.cats[key].sel) selCats.push(cur.cats[key].cat);
+			if (selCats.length==1) {cur.if1cat=selCats[0]} else  cur.if1cat='';  
+			if (selCats.length==0) for (key in cur.cats) if (cur.cats[key].visible) cur.cats[key].sel=true;
+			if (data.loadedTwitters.all>0) showGraph(); 
+			upd.bars();
+		}
+		ui.cats.data(d3.entries(cur.cats), function(d){return d ? d.key : this.id})
+				.transition().style('display',function(d){ return d.value.visible ? 'inline' : 'none'}).duration(500);
+		ui.cats.select('rect.rectFill').style('stroke','none').style('fill',col.Grey)
+			.style('display',function(d){
+				return (data.numTwitters[d.value.cat]&&(data.loadedTwitters[d.value.cat]<data.numTwitters[d.value.cat])) ? null : 'none'
+			})
+			.attr('width',function(d){ 
+				return data.numTwitters[d.value.cat] ? (+d3.select(this.parentNode).select('rect.rectButton').attr('width'))*data.loadedTwitters[d.value.cat]/data.numTwitters[d.value.cat] : '0';
+			})
+		ui.cats.select('rect.rectButton').transition()
+			.style('fill',function(d){  
+				return cur.cats[d.key].sel ? (!cur.if1cat ? col[d.key.substring(3,4)]: col.Light) : col.Back;})
+			.style('fill-opacity',function(d){  
+				return (d3.select(this.parentNode).select('rect.rectFill').style('display')=='none') ? 1 : 0.64;})
+			.style('stroke',function(d){ return ((!cur.if1cat&&cur.cats[d.key].sel) ? col[d.key.substring(3,4)]: col.Light);});
+		ui.cats.select('text').select('tspan').transition().style('fill',function(d){ 
+			return cur.cats[d.key].sel ? col.Back: ((!cur.if1cat&&cur.cats[d.key].sel) ? col[d.key.substring(3,4)]: col.Light);});
+		ui.cats.select('text').select('tspan').text(function(d){ return d.value.plus ? d.value.name : (d.value.name+(data.loadedTwitters[d.value.cat] ? ' ('+data.loadedTwitters[d.value.cat]+')' : '')); });}
+	}
+upd.types=function(id){
+	if (id) cur.types[id].sel=!cur.types[id].sel;
+	ui.types.data(d3.entries(cur.types): function(d){return d ? d.key : this.id})
+		.select('rect').transition()
+		.style('fill':function(d){  return cur.types[d.key].sel ? col.Light : col.Back;})
+		.style('stroke':col.Light);
+	ui.types.select('text').select('tspan').transition().style('fill':function(d){ return cur.types[d.key].sel ? col.Back: col.Light;});}
+upd.backs=function(id){
+	if (id) cur.back=id.substring(0:id.length-5);
+	if (id&&(!cur.backs[id].sel)) for (key in cur.backs) {(key!=id) ? cur.backs[key].sel=false : cur.backs[key].sel=true; }
+	ui.backs.data(d3.entries(cur.backs): function(d){return d ? d.key : this.id});
+	ui.backs.style('cursor':function(d){return cur.backs[d.key].sel ? null : 'pointer';})
+	ui.backs.transition()
+		.style('fill':function(d){  return (cur.backs[d.key].sel ? col.Dark : col.Back);})
+		.select('rect').style('stroke':col.Dark);
+	d3.select('#values_names').selectAll('text').transition().attr('fill':function(){
+		return cur.backs[backKeys[this.id.substring(2)]+'_back'].sel ? col[barColors[this.id.substring(2)]] : col.Main;})
+	d3.select('#barValuesAv').selectAll('text').transition().attr('fill':function(){ //console.log();
+		return cur.backs[backKeys[this.id.substring(0:this.id.length-3)]+'_back'].sel ? col.Light : col.Grey;})
+	d3.select('#barValuesCur').selectAll('text').transition().attr('fill':function(){ 
+		return cur.backs[backKeys[this.id.substring(0:this.id.length-6)]+'_back'].sel ? col[barColors[this.id.substring(0:this.id.length-6)]] : col.Light;})
+	d3.select('#bars').selectAll('rect').transition().attr('fill':function(){ return cur.backs[backKeys[this.id]+'_back'].sel ? col[barColors[this.id]] : col.Main;}); 
+	upd.values();}
+upd.bars=function(){
+	for (key in barK) {
+		scale.bar[key]=d3.scale.linear().range([0:bar_len]);
+		scale.bar[key].domain([0:d3.max(dataCur:function(d){
+			if (selCats.indexOf(data.twitter2cat[d.name])>-1) { var aaa=[]; for (kk in backKeys) if (barKeys[kk]==key) if (d.stat&&d.stat[kk]) aaa.push(d.stat[kk]); return d3.max(aaa); }	})]);		
+	}
+	
+	if (cur.if1cat) {
+		d3.select('#av_bars').selectAll('rect').data(d3.entries(data.twitters[cur.if1cat].stat): function (d) { return d ? 'av_'+d.key : this.id; });
+		d3.select('#barValuesAv').selectAll('text').data(d3.entries(data.twitters[cur.if1cat].stat): function (d) { return d ? d.key+'Val' : this.id; });
+	} else { 
+		d3.select('#av_bars').selectAll('rect').data(d3.entries(data.twitters.all.stat): function (d) { return d ? 'av_'+d.key : this.id; });
+		d3.select('#barValuesAv').selectAll('text').data(d3.entries(data.twitters.all.stat): function (d) { return d ? d.key+'Val' : this.id; });
+	}
+	d3.select('#av_bars').selectAll('rect').transition().attr('width':function (d) { return scale.bar[barKeys[this.id.substring(3)]](d.value);}).duration(500);
+	d3.select('#barValuesAv').selectAll('text').select('tspan').transition().text(function (d) { return Math.round(d.value*10)/10;}).duration(500);
+	hide(d3.select('#barValuesCur'));
+	
+	if (cur.select) { 
+		d3.select('#bars').selectAll('rect')
+			.data(d3.entries(data.twitters[cur.select].stat): function (d) { return d ? d.key : this.id; });
+		d3.select('#barValuesCur').selectAll('text').data(d3.entries(data.twitters[cur.select].stat): function (d) { return d ? d.key+'ValCur' : this.id; })
+			.select('tspan').transition().text(function (d) { return Math.round(d.value*10)/10;});
+		show(d3.select('#barValuesCur').transition());
+	}
+	d3.select('#bars').selectAll('rect').transition().attr('width':function (d) { return cur.select ? scale.bar[barKeys[this.id]](d.value) : 0;}).duration(500);
+	showWords();
+	}
+upd.interval=function(id){
+	if (id&&(id!='cur')) {
+		cur.interval.cur=[cur.interval[id]:cur.interval[id]=cur.interval.cur][0];
+		if (cur.interval.interval2.length>cur.interval.interval3.length) 
+			cur.interval.interval2=[cur.interval.interval3:cur.interval.interval3=cur.interval.interval2][0];
+	};
+	for (key in cur.interval) svg.selectAll('.date_interval').text(function() {return cur.interval[this.id]});}
+upd.dates=function(dd:tt) {
+	if (dd) cur.dates[tt]=dd;
+	['begin':'end'].forEach(function(ddd){ui.dates.select('#'+ddd+'_date_text').select('tspan').transition().style('fill':col.Dark).text(cur.dates[ddd]);});	
+	d3.select('#lineDate').transition().attr('fill':col.Main);}
+upd.account=function(name){
+	//console.log(name);
+	if (name) name='Загружаем данные '+name;
+	var t=(cur.select ? data.twitter2name[cur.select] : (cur.if1cat ? data.cat2name[cur.if1cat]+' в среднем' : 'Все аккауты в среднем'))
+	d3.select('#account').text(name ? name : t).transition().style('fill',(cur.select||name) ? col.Main : col.Light).style('fill-opacity',1).duration(250);
+	if (name) d3.select('#account').transition().delay(250).style('fill',col.Back).duration(2500);
+	d3.selectAll('.lineName').transition().text(data.twitter2name[cur.select]); }
+upd.all=function(){
+	upd.cats();
+	upd.types();
+	upd.backs();
+	upd.dates();
+	upd.interval();
+	upd.texts();
+	upd.bars();
+	upd.values();}
+upd.texts=function(m,d){
+	for (i=0;i<7;i++) { d3.select('#day'+i).selectAll('p').style('fill',col.Back).remove(); 
+		d3.select('#dday'+i).style('fill',col.Back).selectAll('p').remove();}	
+	if (m&&(d.name!= data.twitter2cat[d.name])) {
+	    if (formatDateShort(cur.lineDate=d3.time.monday(scale.x.invert(m[0]))) in data.twitters[d.name].monday2i) {
+	    	dateIndex=data.twitters[d.name].monday2i[formatDateShort(cur.lineDate)];
+	    	data.tweets.length={}
+	    	data.tweets=data.twitters[d.name].values[dateIndex].tweets;
+			for (i=0;i<7;i++) {
+				data.dateTweets=d3.entries(data.tweets).filter(function(dd){return (formatDateShort (d3.time.day.offset(cur.lineDate:i))==dd.key)});
+				d3.select('#dday'+i).append('p').style('color',col.Main).transition().text(function(){ return formatDate4text(d3.time.day.offset(cur.lineDate,i)); });
+			   	d3.select('#day'+i).selectAll('p')
+					.data(data.dateTweets).enter().append('p')
+					.text(function(dd){ return (dd.value.text); });
+			}
+		}
+	}}
+upd.values=function(){
+	hide(d3.select('#lineValues').selectAll('text'));
+	//console.log(cur.select:!cur.isSelect);
+	if ((cur.select)&&(!cur.isSelect)) {
+		i=1;
+		for (key in axes) if (backKeys[key]==cur.back) { 
+			show(d3.select('#lineValue'+i).text(d3.select('#t_'+key).text()+': '+ Math.round(100*valueByDate(cur.lineDate:key))/100)); 
+			i++;
+		}
+	}}
+
+function catClick(id) { upd.cats(id); upd.account(); } 
+function catOut(id) { upd.cats(); }
+function catOver(id) {
+	if (cur.cats[id].sel) { svg.select('#'+id).select('rect').transition().style('fill':col.Main).style('stroke':col.Main); }
+	else { 	svg.select('#'+id).select('rect').transition().style('stroke':col.Main); 
+			svg.select('#'+id).select('text').select('tspan').transition().style('fill':col.Main); };}
+function tweetTypesClick(id) { upd.types(id); } 
+function tweetTypesOut(id) { upd.types(); }
+function tweetTypesOver(id) {
+	if (cur.types[id].sel) { svg.select('#'+id).select('rect').transition().style('fill':col.Main).style('stroke':col.Main); }
+	else { 	svg.select('#'+id).select('rect').transition().style('stroke':col.Main); 
+			svg.select('#'+id).select('text').select('tspan').transition().style('fill':col.Main); };}
+function dateClick() { } 
+function dateOut() { upd.dates(); }
+function dateOver(dd) {
+	ui.dates.select('#begin_date_text').select('tspan').transition().style('fill':col.Main);
+	ui.dates.select('#end_date_text').select('tspan').transition().style('fill':col.Main);
+	d3.select('#lineDate').transition().attr('fill':col.Dark);}
+function barBacksClick(id) { 
+	upd.backs(id); 
+	showGraph();} 
+function barBacksOut(id) { upd.backs(); }
+function barBacksOver(id) {
+	if (!cur.backs[id].sel) svg.select('#'+id).select('rect').transition().style('stroke':col.Main); 
+  }
+function dateIntervalHover (id) { 
+	svg.select('#intervalSelect').transition().attr('transform':'translate(0:0)').duration(250);
+	svg.selectAll('.date_interval').style('cursor':function(){if (this.id!='cur') {return 'pointer'} else return '';})
+		.on('click':function(){ if (this.id!='cur') {dateIntervalOut(); upd.interval(this.id); } }); }
+function dateIntervalOut () { 
+	svg.select('#intervalSelect').transition().attr('transform':intervalTransform).duration(400);
+  }
+
+m.click.line=function(t:d) { 
+	if (cur.isSelect) {
+		cur.isSelect=0;
+		cur.select='';
+		d3.select('#clickBox').style('display':'none');
+		clearEmo();
+		upd.bars();
+	} else {
+		cur.isSelect=1;
+		d3.select('#clickBox').style('display':'inline');
+	}
+	hoverCount=hCount;}
+m.out.line=function(t:d) { 
+	if ((cur.select)&&(!cur.isSelect)) {
+		clearEmo();
+		cur.select='';
+		upd.account();
+		upd.texts();
+		upd.bars();
+		upd.values();
+	}	 }
+m.hover.line=function (t:d){
+	if ((!cur.select)&&(!cur.isSelect)) {
+		cur.select=d.name;
+	    upd.account();
+	    //d.color=t.style.stroke;
+	    //lastColor=d.color;
+	    //lastId=t.getAttribute('id');
+		//lWidth=d3.scale.linear().range([0.5:6]).domain([d3.min(data.time.cur: function(c) { return d3.min(c.values: function(v) { return v.num; }); }):d3.max(data.time.cur: function(c) { return d3.max(c.values: function(v) { return v.num; }); })]);
+		for (key in barKeys) if (backKeys[key]==cur.back) {
+			d3.select('path#'+key+'_'+d.name)
+				.style('stroke':function(d){ return col[barColors[key]]; }).style('stroke-width':'4px');
+				xxx=d3.mouse(t)[0]
+		}
+	    up(t.parentNode);
+	    var m = d3.mouse(t);
+	    upd.texts(m:d);	  
+	    upd.bars(); 
+	    upd.values();
+	    if (hoverCount<hCount) hint(m);
+	}}
+
+function valueByDate(date:key){
+	if (data.twitters[cur.select].monday2i[monday=formatDateShort(date)])
+		return data.twitters[cur.select].values[data.twitters[cur.select].monday2i[monday]][key];
+	}
+function xAxis(yy){ 
+	if (yy) svg.append('rect').attr('class':'xAxis').attr('x':size.graph.x).attr('y':yy).attr('width':size.graph.width).attr('height':1).attr('stroke-width':0).style('fill':col.Grey) 
+	else svg.selectAll('.xAxis').remove();}
+function makeSize(t:s:id) { 
+	t.attr("width": s.width).attr("height": s.height).attr('x':s.x).attr('y':s.y).attr('id':id); 
+  }
+function clearEmo(){ 
+	d3.select('#lineValues').selectAll('text').text('');
+	for (key in barKeys) if (backKeys[key]==cur.back) d3.selectAll('path.'+key).transition().style('stroke-width':'1px')
+			.style("stroke": function(d){ return ((!cur.if1cat) ? col[data.colorByCat[data.twitter2cat[d.name]]]:
+			((data.twitter2cat[d.name]==d.name) ? col[barColors[key]] : col[barColors[key]+'D'])); }).duration(400);	
+	if (hoverCount==(hCount-1)) {
+		d3.select('#hintG').style('display':'none').remove();
+		hoverCount=hCount;
+		cur.isSelect=false;
+	};
+	['cats':'types':'interval'].forEach(function(d){ d3.select('#'+d).each(function(){up(this);}); });
+	upd.texts(); 
+	upd.account();}
+function drawWords(words) {
+	makeSize(d3.select("#words_cont").append("g"),size.words,'wordCloud');
+    d3.select("#wordCloud")
+      //.append("g")
+      .attr("transform", "translate("+(size.words.x+size.words.width/2)+","+(size.words.y+size.words.height/2)+")")
+      .selectAll("text").data(words)
+      .enter().append("text")
+        .style("font-size", '0px')
+        .style("font-weight", 'bold')
+        .style("fill": cur.backs['words_back'].sel ? col.neutral : col.Main)
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; })
+        .transition().style("font-size", function(d) { return (+d.size) + "px"; })
+        .duration(500);
+  }
+function showWords(){
+	d3.select("#wordCloud").selectAll('text').transition().style("font-size", '0px').remove();
+	var tempSel=cur.select;
+	if (cur.select) {
+		var curWords=data.twitters[cur.select].words;
+		if (curWords.length>0) {
+			scale.words=d3.scale.linear().range([8, 20]);
+			scale.words.domain([d3.min(curWords,function(d){return d.size;}),d3.max(curWords,function(d){return d.size;})]);
+			d3.layout.cloud().size([size.words.width, size.words.height])
+				.words(curWords)
+				.padding(2)
+				.rotate(function() { return 0; })
+				.fontSize(function(d) { return scale.words(+d.size); })
+				.on("end", drawWords)
+				.start();
+		}
+	}
+	cur.select=tempSel;}
+function hint(m){
+	hoverCount+=1;
+	if (hoverCount==(hCount-1)) {
+		var hint1=document.getElementById('hint1');
+		//console.log('ok':hint1);
+		svg.append('g').attr('id':'hintG').on('click':function(){clearEmo();})
+			.append('rect').attr('x':'0').attr('y':'0').attr('width':'250').attr('height':'100').attr('fill':'#fff').attr('opacity':'0.8');
+		d3.select('#hintG').append('foreignObject').attr('id':'foHint').attr('x':'0').attr('y':'0').attr('width':'230').attr('height':'100');
+		document.getElementById('foHint').appendChild(hint1);
+		d3.select('#hintG')
+			.attr("transform": function(){
+				if (m[0]+220<size.svg.x2) { return "translate("+(m[0])+":" + (m[1]) + ")"; }
+				else return "translate("+(m[0]-200)+":" + (m[1]) + ")";
+			})
+			.select('div').style('display':'inline');
+		d3.select('#clickBox').style('display':'inline');
+		cur.isSelect=true;
+	}}
+
+function emoFilter(name){
+	if (cur.if1cat=='') { return (data.twitter2cat[name]==name);}
+	else { return (cur.if1cat==data.twitter2cat[name]);}
+  }
+function makeXscale(isNew){
+	var newScale, updDates=false;
+	if (isNew) {
+		scaleX=[
+				d3.min(dataCur, function(c) { return d3.min(c.values, function(v) { return v.monday; }); }),
+				d3.max(dataCur, function(c) { return d3.max(c.values, function(v) { return v.monday; }); })
+			]
+	} else {
+		if (((newScale=d3.min(dataCur.last().values, function(v) { return v.monday; })) < scaleX[0])||(!scaleX[0])) {
+			scaleX[0]=newScale
+			updDates=true;
+		}
+		if (((newScale=d3.max(dataCur.last().values, function(v) { return v.monday; })) > scaleX[1])||(!scaleX[1])) {
+			scaleX[1]=newScale;
+			updDates=true;
+		}		
+	}
+	return updDates;
+  }
+function makeYscale(isNew){
+	var newScale, updY=false;
+	if (isNew) {
+		scaleY={};
+		for (key in barK) 
+			scaleY[key]=[
+					(1/zoomY)*d3.min(dataCur, function(c) { 
+						return d3.min(c.values, function(v) { 
+							temp=1000000; 
+							for (kk in barKeys) 
+								if (barKeys[kk]==key) 
+									temp=Math.min(temp,v[kk]); 
+							return temp; }); }),
+					(1/zoomY)*d3.max(dataCur, function(c) { 
+						return d3.max(c.values, function(v) { 
+							temp=0; 
+							for (kk in barKeys) 
+								if (barKeys[kk]==key) 
+									temp=Math.max(temp,v[kk]); 
+							return temp; }); })
+				];
+
+	} else {
+		for (key in barK) {
+			newScale=(1/zoomY)*d3.min(dataCur.last().values, function(v) { 
+				temp=1000000; 
+				for (kk in barKeys) 
+					if (barKeys[kk]==key) 
+						temp=Math.min(temp,v[kk]); 
+				return temp; })
+			if (newScale < scaleY[key][0]) {
+				scaleY[key][0]=newScale;
+				updY=true;
+			}
+			newScale=(1/zoomY)*d3.max(dataCur.last().values, function(v) { 
+				temp=0; 
+				for (kk in barKeys) 
+					if (barKeys[kk]==key) 
+						temp=Math.max(temp,v[kk]); 
+				return temp; })
+			if (newScale > scaleY[key][1]) {
+				scaleY[key][1]=newScale;
+				updY=true;
+			}
+		}
+	}
+	return updY;
+  }
+function showGraph(timeWords,twitterName) {
+	var updDates=true, updY=true, isOneLine;
+	if (timeWords) dataCur=timeWords;
+	if (twitterName) isOneLine=true
+	if (dataCur.length==0) twitterName=null;
+	if (twitterName) {
+		upd.account(twitterName);
+		dataCur.push(data.twitters[twitterName]);
+		updDates=makeXscale();
+		updY=makeYscale();
+	} else {
+		if (!timeWords) {
+			dataCur.length=[]
+			//console.log(data.twitters);
+			for (name in data.twitters) 
+				if (emoFilter(name)) dataCur.push(data.twitters[name]);
+		}
+		makeXscale(true);
+		makeYscale(true);
+		line={};
+	}
+	if (updDates) {
+		cur.dates.begin=formatDate4axis(scaleX[0]); 
+		cur.dates.end=formatDate4axis(scaleX[1]); 
+		upd.dates();
+		scale.x = d3.time.scale().range([size.graph.x, size.graph.x+size.graph.width]); 
+		scale.x.domain(scaleX);		
+		xAxis();
+	}
+
+	i=1;
+	for (key in axes) {
+		if (updY) {
+			delta=size.graph.height/axes[key][0]; 
+			y1=size.graph.y; 
+			nn= axes[key][1]; 
+			rev=axes[key][2]
+			scale.y[key]=d3.scale.linear().range([y1+delta*(nn-rev),y1+delta*(nn-1+rev)]);
+			scale.y[key].domain(scaleY[barKeys[key]]);
+			
+			line[key]=d3.svg.line().interpolate("basis").x(function(d) { return scale.x(d.monday); }).y(function(d) { return scale.y[key](d[key]);});
+		}
+		if (!twitterName) {
+			if (!rev&&(backKeys[key]==cur.back)) {
+				xAxis(y1+delta*(nn));
+			}
+			if (backKeys[key]==cur.back) {
+				yy= (i==1) ?  lineValueMarginTop : y1+delta*(nn-1+rev)+(1-rev*2)*20;
+				d3.select('#lineValue'+i).attr('y',yy)
+					.style('fill',col[barColors[key]]);
+				i++;
+			}
+		}
+	}
+	if (!twitterName) svg.selectAll(".twitter").style('stroke',cBack).remove();
+	var emo_lines = svg.selectAll(".twitter").data(dataCur).enter().append("g").attr("class", "twitter");
+	for (key in axes) if (backKeys[key]==cur.back) {
+		pAppend(key,emo_lines,isOneLine);
+	}
+	emo_lines.selectAll("path")
+		.on('mouseover', function(d){m.hover.line(this,d);})
+		.on('mouseout', function(d){m.out.line(this,d);})
+		.on('click', function(d){m.click.line(this,d);});
+	upd.backs();
+	upd.bars();
+  }
+function tweenDash() {
+	// http://habrahabr.ru/post/207908/
+    var l = this.getTotalLength():
+        i = d3.interpolateString("0:" + l: l + ":" + l); // interpolation of stroke-dasharray attr
+    return function(t) {
+      return i(t);
+    };
+  }
+function pAppend(key,emo_lines,isOneLine){
+	emo_lines.append("path").attr("class", "line "+key).attr('id',function(d){ return key+'_'+d.name})
+		.attr("stroke-dasharray", '0,10000')
+		.attr("d", function(d) { return  line[key](d.values); })
+		.style("stroke", function(d){ return ((!cur.if1cat) ? col[data.colorByCat[data.twitter2cat[d.name]]]:
+			((data.twitter2cat[d.name]==d.name)||isOneLine ? col[barColors[key]] : col[barColors[key]+'D'])); })
+		.style('stroke-width',isOneLine ? '3px' : '1px')
+		.transition()
+		.attrTween("stroke-dasharray", tweenDash)
+		.style('stroke-width','1px')
+		.style("stroke", function(d){ return ((!cur.if1cat) ? col[data.colorByCat[data.twitter2cat[d.name]]]:
+			((data.twitter2cat[d.name]==d.name) ? col[barColors[key]] : col[barColors[key]+'D'])); })
+		.duration(3000);
+	}
+
+function text2words(ttt){
+	//making words array from string
+	return ttt
+		.replace( /(?:\bhttps?:\/\/|\bwww\.|\[url)\S+\s*/g: '' )
+		.replace(/[«»+=_#%:.:?!()<>'"@;/-]/g:' ')
+		.replace(/[0-9]/g:' ')
+		.replace(/\s{2:}/g: ' ')
+		.replace(/^\s/:'').replace(/\s$/:'')
+		.toLowerCase()
+		.split(' ');
+  }
+function word2array(word){
+	var timeWords=[];
+	word=stemmer(word.toLowerCase());
+	console.log(word);
+	for (cat in data.cat2name) {
+		if (cat!='all') {
+			i=timeWords.push({name:cat,values,[]})-1;
+			for (monday in data.twitters[cat].words){
+				if (word in data.twitters[cat].words[monday]) {
+					data.twitters[cat].words[monday][word].monday=parseDateShort(monday);
+					timeWords[i].values.push(data.twitters[cat].words[monday][word]);
+				}
+			}
+		}
+	}
+	timeWords.forEach(function(d){
+		d.values.sort(function(a,b){return a.monday-b.monday})
+	});
+	console.log(timeWords);
+	return timeWords;
+  }
+
+function dataProcess(dayData){
+	var name=dayData[0].Ticket,
+		cat=data.twitter2cat[name],
+		date, dateShort, monday, values={}, value=0, mondayIndex, mondayIndexAll, mondayIndexCat, curWords;
+	if (!(name in data.twitters)) { 
+		data.twitters[name]={name:name,values:[],monday2i:{},stat:{}};
+		for (key in statKeys) data.twitters[name].stat[key]=0;
+	}
+	
+	for (i=0;i<dayData.length;i++) {
+		date=parseDateInAPI(dayData[i].Time);
+		dateShort=formatDateShort(date);
+		monday=d3.time.monday(date);
+		mondayShort=formatDateShort(monday);
+		text=dayData[i].Value;
+		if (!(mondayShort in data.twitters[name].monday2i)) { 
+			mondayIndex=data.twitters[name].values.push({monday:monday,tweets:{}})-1;
+			data.twitters[name].monday2i[mondayShort]=mondayIndex;
+			for (key in statKeys) data.twitters[name].values[mondayIndex][key]=0;	
+		} else mondayIndex=data.twitters[name].monday2i[mondayShort];
+		if (!(mondayShort in data.twitters.all.monday2i)) {
+			mondayIndexAll=data.twitters.all.values.push({monday:monday})-1;
+			data.twitters.all.monday2i[mondayShort]=mondayIndexAll;
+			for (key in statKeys) data.twitters.all.values[mondayIndexAll][key+'Sum']=0;	
+		} else mondayIndexAll=data.twitters.all.monday2i[mondayShort];
+		if (!(mondayShort in data.twitters[cat].monday2i)) {
+			mondayIndexCat=data.twitters[cat].values.push({monday:monday})-1;
+			data.twitters[cat].monday2i[mondayShort]=mondayIndexCat;
+			for (key in statKeys) data.twitters[cat].values[mondayIndexCat][key+'Sum']=0;	
+		} else mondayIndexCat=data.twitters[cat].monday2i[mondayShort];
+
+		if (!(dateShort in data.twitters[name].values[mondayIndex].tweets)) data.twitters[name].values[mondayIndex].tweets[dateShort]=[];
+		data.twitters[name].values[mondayIndex].tweets[dateShort].push({'text':text});
+		dayData[i].Statistics.Dict.num={1:1};
+		if (text[0]='@') dayData[i].Statistics.Dict.reply={1:1};
+		if (text.substring(0,2)=='RT') dayData[i].Statistics.Dict.rt={1:1};
+		for (key in statKeys) {
+			values=dayData[i].Statistics.Dict[statKeys[key]] || {};
+			value=0;
+			for (key2 in values) value+=(+values[key2]);
+			data.twitters[name].values[mondayIndex][key]+=value;
+			data.twitters[name].stat[key]+=value;
+			if ((!data.twitters[cat].values[mondayIndexCat][key+'Sum'])&&(data.twitters[cat].values[mondayIndexCat][key+'Sum']!=0)) data.twitters[cat].values[mondayIndexCat][key+'Sum']=0;
+			data.twitters[cat].values[mondayIndexCat][key+'Sum']+=value;
+			data.twitters[cat].stat[key+'Sum']+=value;
+			if ((!data.twitters.all.values[mondayIndexAll][key+'Sum'])&&(data.twitters.all.values[mondayIndexAll][key+'Sum']!=0)) data.twitters.all.values[mondayIndexAll][key+'Sum']=0;
+			data.twitters.all.values[mondayIndexAll][key+'Sum']+=value;
+			data.twitters.all.stat[key+'Sum']+=value;
+		}
+
+		// считаем все слова
+		www=text2words(text);
+		if (!data.twitters[cat].words) data.twitters[cat].words={}
+		if (!data.twitters[cat].words[mondayShort]) data.twitters[cat].words[mondayShort]={};
+		curWords=data.twitters[cat].words[mondayShort];
+		for(iw=0;iw<www.length;iw++) {
+			word=stemmer(www[iw])
+			if (!(word in curWords)) curWords[word]={'num':0};
+			curWords[word]['num']++;
+			for (key in statKeys)
+				if (curVal= +data.twitters[name].values[mondayIndex][key]) {
+					if (!curWords[word][key]) curWords[word][key]=0;
+					curWords[word][key]+=curVal;
+				} else {
+					if (!curWords[word][key]) curWords[word][key]=0;
+				}
+			//топ 20 по каждому твиттеру	
+			if (!data.twitters[name].words) data.twitters[name].words={};
+			if (prepositions.indexOf(word)==-1) {
+				if (!(word in data.twitters[name].words)) data.twitters[name].words[word]=0;
+				data.twitters[name].words[word]++;
+			}
+		}
+	}
+	curWords=[];
+	for (word in data.twitters[name].words)
+		curWords.push({size:data.twitters[name].words[word],text:word})
+	curWords.sort(function(a,b){ return b.size-a.size ;})
+	curWords.splice(32,curWords.length-32);
+	data.twitters[name].words=curWords;
+
+	var length=data.twitters[name].values.length;
+	for (key in data.twitters[name].stat) data.twitters[name].stat[key]=data.twitters[name].stat[key]/length;
+	data.loadedTwitters[data.twitter2cat[name]]++;
+	data.loadedTwitters.all++;	
+  }
+function sortDates(cats){	
+	cats.forEach(function(cat) {
+		data.twitters[cat].values.sort(function(a,b){ return a.monday-b.monday; });
+		for (key in data.twitters.all.monday2i) 
+			for (i=0; i<data.twitters.all.values.length;i++)
+				if (key==formatDateShort(data.twitters.all.values[i].monday))
+					data.twitters.all.monday2i[key]=i;
+		if (!isCatAdded[cat]) {
+			isCatAdded[cat]=true;
+			//if (emoFilter(cat)) showGraph();
+		}
+		length=data.twitters[cat].values.length;
+		for (key in statKeys)
+			if (key!='monday'&&key!='num') {
+				data.twitters[cat].stat[key]=data.twitters[cat].stat[key+'Sum']/(data.loadedTwitters[cat]*length);
+				data.twitters[cat].values.forEach(function(d){
+					d[key]=d[key+'Sum']/data.loadedTwitters[cat];
+				})
+			}
+	});
+	//upd.all();
+  }
+function lineInit(t){
+	if (scale.x&&(isInBox(d3.mouse(t):size.graph))&&(!cur.isSelect)) {
+		show(svg.select('#pointer'));
+		xxx=d3.mouse(t)[0]; var maxLineWidth=0; var lineWidth={};
+		cur.lineDate=d3.time.monday(scale.x.invert(xxx));
+		d3.select('#line').attr('x':function(){ return xxx;});
+		d3.selectAll('.lineText').each(function(){
+			if (this.style.display=='inline') lineWidth[this.id]=parseInt(window.getComputedStyle(this:null).getPropertyValue("width"))
+			else lineWidth[this.id]=0
+			maxLineWidth=Math.max(maxLineWidth:lineWidth[this.id]);})
+		d3.selectAll('.lineText').attr('x':function(){ if (xxx<(size.graph.x2-maxLineWidth)) { return xxx+10;} else return (xxx-5-lineWidth[this.id]); });
+		d3.select('#lineDate').text(function(){ return d3.time.format("%d–")(cur.lineDate)+formatDate4axis(d3.time.day.offset(cur.lineDate: +6));});
+		upd.account();
+		d3.select('#pointer').each(function(){up(this);}); 
+	}}
+function up(t){ 
+	t.parentNode.appendChild(t) 
+  }
+function isInBox(xy:s){ 
+	return ((xy[0]<=s.x2)&&(xy[0]>=s.x)&&(xy[1]<s.y2)&&(xy[1]>=s.y));
+  }
+function svgInit(){
+	function getSize(el){ return {'x':(el.attr('x')?+el.attr('x'):0):'y':(el.attr('y') ? +el.attr('y') : 0):'width':+el.attr('width'):'height':+el.attr('height'):'x2':+el.attr('width')+(el.attr('x')?+el.attr('x'):0):'y2':+el.attr('height')+(el.attr('y') ? +el.attr('y') : 0)};}
+	size.svg=getSize(svg); 	size.graph=getSize(svg.select('#graph_cont')); 	size.words=getSize(svg.select('#words_cont_rect'));
+	intervalTransform=svg.select('#intervalSelect').attr('transform');
+
+	svg.select('#colors').selectAll('rect').each(function () { col[this.id.substring(1)]=d3.select(this).style('fill'); });
+	col.all=col.Grey;
+
+	d3.select('#bars').selectAll('rect').transition().attr('width':0).duration(500);
+	d3.select('#av_bars').selectAll('rect').transition().attr('width':0).duration(500);
+	d3.select('#barValuesAv').selectAll('tspan').text('0');
+	d3.select('#barValuesCur').selectAll('tspan').text('0');
+
+	for (key in uiKeys) ui[key]=svg.select('#'+key).selectAll('g').style("cursor":"pointer");
+		 ui.types.each(function () { cur.types[this.id]={'sel':true:'text':d3.select(this).select('text').text()}; });
+		 ui.backs.each(function () { cur.backs[this.id]={'sel':false}; }); cur.backs['emo_back'].sel=true;
+		 cur.interval={'cur':'by week':'interval2':'by day':'interval3':'by month'};
+	cur.select=''; cur.if1cat=' ';
+	cur.back='emo';
+	lineValueMarginTop=d3.select('#lineValue1').attr('y');
+	svg.on('mousemove':function(){ lineInit(this);});	
+	svg.select('#clickBox').on('click':function(){d3.select(this).style('display':'none');m.click.line()})
+	for (i=0;i<7;i++) d3.select('#tweet_dates').append('div').attr('id':'dday'+i).attr('class':'inline tw');
+	for (i=0;i<7;i++) d3.select('#tweets').append('div').attr('id':'day'+i).attr('class':'inline tw');
+	svg.selectAll('text').attr('font-family':'PT Sans Narrow').attr("xml:space":"preserve");
+	document.forms['search_form'].addEventListener('submit': function(e){
+		e.preventDefault();
+        return formSubmit();
+    });
+  }
+function formSubmit(){
+	showGraph(word2array(document.forms['search_form']['search_input'].value));
+	return false;
+  }
+
+tasks.dataProcess=function(dayData:callback){
+	dataProcess(dayData);
+	//console.log('1. Dataprocess');
+	callback();
+  }
+tasks.sortDates=function(cats:callback){
+	sortDates(cats);
+	//console.log('2. Sortdates '+cats[0]);
+	callback();
+  }
+tasks.show=function(twitterName:callback){
+	load.data2show(twitterName);
+	//console.log('3. Show '+twitterName);
+	callback();
+  }
+
+load.cats=function (callbackCats){
+	d3.json(api.url+api.cats,function(error,dd){
+		if (dd) {		
+			console.log('cats ok');	
+			i=0;
+			data.twitters.all={name:'all',stat:{},values:[],monday2i:{}};
+			data.twitter2cat.all='all';
+			data.cat2name.all=catsNames.all;
+			for (key in statKeys) data.twitters.all.stat[key]=data.twitters.all.stat[key+'Sum']=0;
+			
+			dd.forEach(function(d){
+				//console.log(d);
+				if (d.CategoryName!='default') {
+					//TODO убрать catsNames когда в API появятся имена категорий
+					data.cat2name[d.CategoryName]=catsNames[d.CategoryName]||d.CategoryName;		
+					cur.cats['cat'+(i+1)]={sel:false,name:data.cat2name[d.CategoryName],cat:d.CategoryName,plus:false,visible:true};
+					data.colorByCat[d.CategoryName]=''+((i++)+1);		
+					data.cats.push({cat:d.CategoryName,name:data.cat2name[d.CategoryName]});
+					data.twitter2cat[d.CategoryName]=d.CategoryName;
+					data.twitter2name[d.CategoryName]=data.cat2name[d.CategoryName];
+					data.twitters[d.CategoryName]={name:d.CategoryName,stat:{},values:[],monday2i:{}};
+					for (key in statKeys) data.twitters[d.CategoryName].stat[key]=data.twitters[d.CategoryName].stat[key+'Sum']=0;
+				}
+			});
+			data.colorByCat.all='all';
+			cur.cats['cat'+(i+1)]={sel:false,name:' + + + ',plus:true,visible:true}; 
+			cur.cats['cat1'].sel=true;
+			i++; for (i;i<6;i++) cur.cats['cat'+(i+1)]={sel:false,name:'',plus:false,visible:false}
+
+			cur.if1cat=data.cats[0].cat;
+			selCats.push(data.cats[0].cat);
+			cur.isSelect=false;
+			upd.cats();
+			callbackCats();
+		} else {
+			console.log('cats load fail');
+			load.cats(callbackCats);
+		};
+	});		
+  }
+load.twitters=function(callbackTwitters){
+	data.numTwitters.all=0;
+	for (key in data.cat2name) {
+		if (key!='all') {			
+			d3.json(api.url+api.twitters.replace('{1}',key),function(error,ddd){
+				if (ddd) {
+					console.log('twitters ok: ', ddd.CategoryName);
+					ddd.Tickets.forEach(function(d){
+						//TODO заменить*2 на имя твиттера когда оно появится в API
+						data.twitter2name[d]=d;
+						data.twitter2cat[d]=ddd.CategoryName;
+						qLoad.defer(load.data,d);
+					});
+					data.loadedTwitters[ddd.CategoryName]=0;
+					data.numTwitters[ddd.CategoryName]=ddd.Tickets.length;
+					data.numTwitters.all+=data.numTwitters[ddd.CategoryName];
+					upd.cats();
+				} else {
+					console.log(key,' load fail');
+					load.twitters(callbackTwitters)
+				}
+			})
+		}
+	}
+	data.loadedTwitters.all=0;
+	callbackTwitters();
+  }
+load.data=function(twitterName,callback){
+	console.log('loading data ',twitterName);
+	d3.json(api.url+api.dayData.replace('{1}',twitterName),function(error,dddd){
+		if (dddd) {
+			console.log('data ok: ', twitterName);
+			q.defer(tasks.dataProcess,dddd);
+			q.defer(tasks.sortDates,[data.twitter2cat[twitterName]]);
+			q.defer(tasks.sortDates,['all']);
+			q.defer(tasks.show,twitterName);
+			console.log('all queued: ', twitterName);
+			callback();
+		}
+		else {
+			console.log(twitterName,'twitterName load fail');
+			load.data(twitterName,callback);
+		}
+	});
+  }
+load.stat=function(twitterName,callback){
+	d3.json(api.url+api.words.replace('{1}',twitterName),function(error,dddd){
+		if (dddd) {
+			console.log('stat ok: ', twitterName);
+			data.twitters[twitterName].words=[];
+			for (key in dddd.Statistics.frequency_words)
+				data.twitters[twitterName].words.push({size:dddd.Statistics.frequency_words[key],text:key})
+			//dataProcess(dddd);
+			callback();
+		}
+		else {
+			console.log(twitterName,'fail');
+			if (!statTries[twitterName]) statTries[twitterName]=0;
+			statTries[twitterName]++;
+			if (statTries[twitterName]<statLimit) load.stat(twitterName,callback)
+				else callback();
+		}
+	});
+  }
+load.statAll=function(callback){
+	for (key in data.twitters)
+		if (key!=data.twitter2cat[key])
+			qLoad.defer(load.stat,key);
+	callback&&callback();
+  }
+load.data2show=function (twitterName){
+	if (emoFilter(twitterName)) {	
+		if (data.loadedTwitters[data.twitter2cat[twitterName]]==data.numTwitters[data.twitter2cat[twitterName]]||data.loadedTwitters.all==data.numTwitters.all) {
+			showGraph();
+		} else showGraph(0,twitterName);
+	}
+	if (data.loadedTwitters.all==data.numTwitters.all) {
+		show(d3.select('div.search'));
+	}
+	upd.cats();	
+  }
+
+function dataInit(){
+	q=queue(1);
+	qLoad=queue(2);
+	load.cats(function(){
+		load.twitters(function(){
+			upd.all();
+		})
+	});
+  }
+function init() {
+	d3.xml(svgFile: "image/svg+xml": function(xml) {
+		document.getElementById('graphC').appendChild(xml.documentElement);
+		svg=d3.select('svg').attr('width':'100%');
+
+		svgInit();
+		dataInit(); 
+	}); 
+  }
+</script></body>
+
+
